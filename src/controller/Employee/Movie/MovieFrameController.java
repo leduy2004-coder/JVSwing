@@ -1,43 +1,45 @@
 package controller.Employee.Movie;
 
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Objects;
-
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-
-import com.toedter.calendar.JDateChooser;
-
 import Service.impl.MovieService;
 import Service.impl.TypeMovieService;
 import model.MovieModel;
 import model.TypeMovieModel;
-import view.Employee.EmployeeView;
+import utility.SetTable;
 import view.Employee.MoviePanel.MovieJFrame;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 
 public class MovieFrameController {
     private MovieJFrame movie;
-    private JFrame frame;
     private MovieService movieService;
     private MovieModel movieModel;
     private String msg;
+    private JPanel jpnView;
+    private JTable table;
+    private String[] COLUMNS;
+    private JTextField jtfSearch;
+    private String[] methodNames;
+    private MouseListener[] mouseListeners;
     TypeMovieService typeMovieService = new TypeMovieService();
+    SetTable<MovieModel> setTable = SetTable.getInstance();
+
     int t=0;
 
-    public MovieFrameController(JFrame frame, MovieJFrame movie) {
-        this.frame = frame;
+    public MovieFrameController( MovieJFrame movie,JPanel jpnView, String[] COLUMNS, JTextField jtfSearch, String[] methodNames,MouseListener[] mouseListeners) {
         this.movie = movie;
+        this.jpnView = jpnView;
+        this.COLUMNS = COLUMNS;
+        this.jtfSearch = jtfSearch;
+        this.methodNames = methodNames;
+        this.mouseListeners = mouseListeners;
         movieService = new MovieService();
     }
 
@@ -98,21 +100,15 @@ public class MovieFrameController {
                             msg = "Bạn muốn thêm dữ liệu không ?";
                             if(showDialog(msg)){
                                 movieService.save(movieModel);
-                                frame.dispose();
-                                EmployeeView employeeView = new EmployeeView();
-                                employeeView.MoviePage();
-                                employeeView.setVisible(true);
                                 movie.dispose();
+                                loadTable();
                             }
                         }else {
                             msg = "Bạn muốn cập nhật dữ liệu không ?";
                             if(showDialog(msg)){
                                 movieService.update(movieModel);
-                                frame.dispose();
-                                EmployeeView employeeView = new EmployeeView();
-                                employeeView.MoviePage();
-                                employeeView.setVisible(true);
                                 movie.dispose();
+                                loadTable();
                             }
                         }
                     }
@@ -177,5 +173,17 @@ public class MovieFrameController {
         String date = null;
         return date = sp.format(d);
     }
+
+    private void loadTable(){
+        jpnView.removeAll();
+        jpnView.validate();
+        jpnView.repaint();
+        List<MovieModel> listItem = movieService.selectAll();
+        table = setTable.setDataToTable(jpnView,COLUMNS,listItem,jtfSearch,methodNames);
+        for (MouseListener listener : mouseListeners) {
+            table.addMouseListener(listener);
+        }
+    }
+
 
 }

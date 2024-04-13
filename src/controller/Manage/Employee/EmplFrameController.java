@@ -1,9 +1,12 @@
 package controller.Manage.Employee;
 
 import Service.impl.EmployeeService;
+import Service.impl.TypeMovieService;
 import com.toedter.calendar.JDateChooser;
 import model.EmployeeModel;
+import model.MovieModel;
 import utility.SessionUtil;
+import utility.SetTable;
 import view.Manage.EmplPanel.EmplManageJFrame;
 import view.Manage.ManagementView;
 
@@ -11,8 +14,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 public class EmplFrameController {
     private JFrame frame;
@@ -20,9 +25,20 @@ public class EmplFrameController {
     private EmployeeModel employeeModel;
     private String msg;
     private EmplManageJFrame empl;
-    public EmplFrameController(JFrame frame,EmplManageJFrame emplManageJFrame){
-        this.frame = frame;
+    private JPanel jpnView;
+    private JTable table;
+    private String[] COLUMNS;
+    private JTextField jtfSearch;
+    private String[] methodNames;
+    private MouseListener[] mouseListeners;
+    SetTable<MovieModel> setTable = SetTable.getInstance();
+    public EmplFrameController(EmplManageJFrame emplManageJFrame,JPanel jpnView, String[] COLUMNS, JTextField jtfSearch, String[] methodNames,MouseListener[] mouseListeners){
         this.empl =emplManageJFrame;
+        this.jpnView = jpnView;
+        this.COLUMNS = COLUMNS;
+        this.jtfSearch = jtfSearch;
+        this.methodNames = methodNames;
+        this.mouseListeners = mouseListeners;
         employeeService = new EmployeeService();
     }
 
@@ -74,22 +90,15 @@ public class EmplFrameController {
                             msg = "Bạn muốn thêm dữ liệu không ?";
                             if(showDialog(msg)){
                                 employeeService.save(employeeModel);
-                                frame.dispose();
-                                ManagementView managementView = new ManagementView();
-                                managementView.EmplPage();
-                                managementView.setVisible(true);
                                 empl.dispose();
-
+                                loadTable();
                             }
                         }else {
                             msg = "Bạn muốn cập nhật dữ liệu không ?";
                             if(showDialog(msg)){
                                 employeeService.update(employeeModel);
-                                frame.dispose();
-                                ManagementView managementView = new ManagementView();
-                                managementView.EmplPage();
-                                managementView.setVisible(true);
                                 empl.dispose();
+                                loadTable();
                             }
                         }
                     }
@@ -167,5 +176,14 @@ public class EmplFrameController {
         String date = null;
         return date = sp.format(d);
     }
-
+    private void loadTable(){
+        jpnView.removeAll();
+        jpnView.validate();
+        jpnView.repaint();
+        List<EmployeeModel> listItem = employeeService.selectAll();
+        table = setTable.setDataToTable(jpnView,COLUMNS,listItem,jtfSearch,methodNames);
+        for (MouseListener listener : mouseListeners) {
+            table.addMouseListener(listener);
+        }
+    }
 }

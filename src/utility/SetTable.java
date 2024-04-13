@@ -7,23 +7,46 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
+import java.lang.reflect.Method;
 import java.util.List;
 
 public class SetTable<T> {
     public static SetTable getInstance() {
         return new SetTable();
     }
-     ClassTableModel classTableModel = new ClassTableModel();
 
     private TableRowSorter<TableModel> rowSorter = null;
-    public void setDataToTable(JPanel panelTable, String[] COLUMNS ,List<T> listItem,JTextField jtfSearch) {
 
+    public DefaultTableModel createTableModel(List<?> dataList, String[] columnNames, String[] methodNames) {
+        DefaultTableModel model = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int rowIndex, int colIndex) {
+                return false;
+            }
+        };
+        model.setColumnIdentifiers(columnNames);
+        for (Object data : dataList) {
+            Object[] rowData = new Object[methodNames.length];
+            for (int i = 0; i < methodNames.length; i++) {
+                try {
+                    Method method = data.getClass().getMethod(methodNames[i]);
+                    Object value = method.invoke(data);
+                    rowData[i] = value;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            model.addRow(rowData);
+        }
+        return model;
+    }
+    public JTable setDataToTable(JPanel panelTable, String[] COLUMNS ,List<?> listItem,JTextField jtfSearch, String[] methodNames) {
 
-        DefaultTableModel model = classTableModel.setTableMovieStatus(listItem, COLUMNS);
+        DefaultTableModel model = createTableModel(listItem,COLUMNS,methodNames);
         JTable table = new JTable(model);
 
         rowSorter = new TableRowSorter<>(table.getModel());
-        table.setRowSorter(rowSorter); //sort
+        table.setRowSorter(rowSorter);
 
         jtfSearch.getDocument().addDocumentListener(new DocumentListener() {
             @Override
@@ -57,6 +80,8 @@ public class SetTable<T> {
         panelTable.add(scroll);
         panelTable.validate();
         panelTable.repaint();
+
+        return table;
     }
 
     private void applyFilter(JTextField jtfSearch) {

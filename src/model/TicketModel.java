@@ -64,4 +64,8 @@ public class TicketModel {
     public void setTien(float tien) {
         this.tien = tien;
     }
+
+    public String getTenPhim() {
+        return getMovieModel().getTenPhim();
+    }
 }

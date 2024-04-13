@@ -5,50 +5,56 @@ import Service.impl.TicketService;
 import Service.impl.TypeMovieService;
 import model.MovieModel;
 import model.TicketModel;
-import utility.ClassTableModel;
 import utility.SessionUtil;
-import view.Employee.SchedulePanel.Frame.RoomFrame;
+import utility.SetTable;
 import view.Employee.TicketPanel.TicketFrame;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
-import javax.swing.table.TableRowSorter;
-import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.List;
 
 public class TicketFrController {
     private TicketFrame ticket;
-    private JFrame frame;
     private TicketService ticketService;
     private MovieModel movieModel;
     MovieService movieService = new MovieService();
-    private ClassTableModel classTableModel = null;
+    SetTable<MovieModel> setTable = SetTable.getInstance();
 
     private final String[] COLUMNS = {"Mã Phim","Tên phim"};
-    private TableRowSorter<TableModel> rowSorter = null;
+    String[] METHOD = {"getMaPhim", "getTenPhim"};
+
     private String msg;
+    private JPanel jpnView;
+    private JTable table = new JTable();
+    private String[] columns;
+    private JTextField jtfSearch;
+    private String[] methodNames;
+    private MouseListener[] mouseListeners;
     TypeMovieService typeMovieService = new TypeMovieService();
     int t=0;
 
-    public TicketFrController(JFrame frame,TicketFrame ticketFrame) {
-        this.frame = frame;
+    public TicketFrController(TicketFrame ticketFrame,JPanel jpnView, String[] COLUMNS, JTextField jtfSearch, String[] methodNames, MouseListener[] mouseListeners) {
         this.ticket = ticketFrame;
+        this.jpnView = jpnView;
+        this.columns = COLUMNS;
+        this.jtfSearch = jtfSearch;
+        this.methodNames = methodNames;
+        this.mouseListeners = mouseListeners;
         ticketService = new TicketService();
-        this.classTableModel = new ClassTableModel();
     }
 
     public void CreateOrUpdate(){
+        JTable table1 = new JTable();
+        List<MovieModel> listItem = movieService.selectAll();
+        table1 = setTable.setDataToTable(ticket.panelTable,COLUMNS,listItem,ticket.search,METHOD);
 
         ticket.lbIdEmploy.setText(SessionUtil.getInstance().getValueEmpl().getHoTen());
-        JTable table = new JTable();
-        java.util.List<MovieModel> list = null;
-        list = movieService.selectStatus();
-        table = setDataToTable(list,table);
+
         MovieModel movie = new MovieModel();
-        movie = getData(table,movie);
+        movie = getData(table1,movie);
         MovieModel finalMovie = movie;
         if(finalMovie.getMaPhim() != null){
             ticket.lbMovie.setText(finalMovie.getTenPhim());
@@ -72,19 +78,14 @@ public class TicketFrController {
 
                             if(showDialog(msg)){
                                 ticketService.save(ticketModel);
-                                frame.dispose();
-                                RoomFrame roomFrame = new RoomFrame( finalMovie);
-                                roomFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                                roomFrame.setVisible(true);
+                                ticket.dispose();
+                                loadTable();
                             }
                         }
                     }else {
                         JOptionPane.showMessageDialog(null, "Kích chuột vào 1 dòng của table !!", "Thông báo", JOptionPane.ERROR_MESSAGE);
                     }
                 }catch (Exception ex){
-                    if(msg.equalsIgnoreCase("Số lượng phải là kiểu số !!"))
-                        JOptionPane.showMessageDialog(null, msg, "Thông báo", JOptionPane.ERROR_MESSAGE);
-                    else if (msg.equalsIgnoreCase("Giá cả phải là kiểu số !!"))
                         JOptionPane.showMessageDialog(null, msg, "Thông báo", JOptionPane.ERROR_MESSAGE);
                 }
             }
@@ -102,7 +103,7 @@ public class TicketFrController {
         ticket.btnExit.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                frame.dispose();
+                ticket.dispose();
             }
 
             @Override
@@ -117,33 +118,7 @@ public class TicketFrController {
         });
     }
 
-    public JTable setDataToTable(List<MovieModel> listItem, JTable table) {
-        DefaultTableModel model = classTableModel.setTableMovieStatus(listItem, COLUMNS);
-        table = new JTable(model);
 
-        rowSorter = new TableRowSorter<>(table.getModel());
-        table.setRowSorter(rowSorter); //sort
-
-        // design
-        table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
-        table.getTableHeader().setPreferredSize(new Dimension(100, 29));
-        table.setRowHeight(39);
-        table.getColumnModel().getColumn(0).setPreferredWidth(100);
-        table.getColumnModel().getColumn(1).setPreferredWidth(200);
-        table.validate();
-        table.repaint();
-
-        JScrollPane scroll = new JScrollPane();
-        scroll.getViewport().add(table);
-        scroll.setPreferredSize(new Dimension(1350, 400));
-        ticket.panelTable.removeAll();
-        ticket.panelTable.setLayout(new CardLayout());
-        ticket.panelTable.add(scroll);
-        ticket.panelTable.validate();
-        ticket.panelTable.repaint();
-
-        return table;
-    }
     public MovieModel getData(JTable table, MovieModel movieModel){
         table.addMouseListener(new MouseAdapter() {
             @Override
@@ -171,6 +146,16 @@ public class TicketFrController {
         return ticket.jtfAmount.getText() != null && !ticket.jtfAmount.getText().equalsIgnoreCase("") &&
                 ticket.jtfMoney.getText() != null && !ticket.jtfMoney.getText().equalsIgnoreCase("") ;
     }
-
+    private void loadTable(){
+        jpnView.removeAll();
+        jpnView.validate();
+        jpnView.repaint();
+        SetTable<MovieModel> setTable = SetTable.getInstance();
+        List<MovieModel> listItem = movieService.selectAll();
+        table = setTable.setDataToTable(jpnView,COLUMNS,listItem,jtfSearch,methodNames);
+        for (MouseListener listener : mouseListeners) {
+            table.addMouseListener(listener);
+        }
+    }
 
 }

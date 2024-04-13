@@ -19,6 +19,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.JSeparator;
 import java.awt.Font;
+import java.awt.event.MouseListener;
 import java.util.Objects;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
@@ -52,7 +53,7 @@ public class EmplManageJFrame extends JFrame {
 
     private EmplFrameController emplFrameController;
 
-	public EmplManageJFrame(EmployeeModel employeeModel, JFrame frame) {
+	public EmplManageJFrame(EmployeeModel employeeModel, JPanel jpnView, String[] COLUMNS, JTextField jtfSearch, String[] methodNames, MouseListener[] mouseListeners) {
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(250, 150, 996, 663);
@@ -266,7 +267,7 @@ public class EmplManageJFrame extends JFrame {
         label_3.setFont(new Font("Dialog", Font.BOLD, 18));
         label_3.setBounds(891, 153, 55, 24);
         jPanel.add(label_3);
-        emplFrameController = new EmplFrameController(frame,this);
+        emplFrameController = new EmplFrameController(this,jpnView,COLUMNS,jtfSearch,methodNames,mouseListeners);
 	    if(employeeModel == null) emplFrameController.CreateOrUpdate();
         else emplFrameController.setView(employeeModel);
     }

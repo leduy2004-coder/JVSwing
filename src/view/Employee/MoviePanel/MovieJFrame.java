@@ -6,23 +6,10 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
+import java.awt.event.MouseListener;
 import java.security.PublicKey;
 
-import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollBar;
-import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.border.Border;
 
 import Service.impl.TypeMovieService;
@@ -55,7 +42,7 @@ public class MovieJFrame extends JFrame {
     public JLabel jlbId;
 
 
-	public MovieJFrame(MovieModel movieModel, JFrame frame) {
+	public MovieJFrame(MovieModel movieModel, JPanel jpnView, String[] COLUMNS, JTextField jtfSearch, String[] methodNames, MouseListener[] mouseListeners) {
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(250, 100, 1026, 778);
@@ -95,8 +82,7 @@ public class MovieJFrame extends JFrame {
         JSeparator separator_1 = new JSeparator();
         separator_1.setBounds(0, 86, 88, 2);
         jPanel.add(separator_1);
-        
-        JLabel lblNewLabel_1 = new JLabel("Loại phim");
+                JLabel lblNewLabel_1 = new JLabel("Loại phim");
         lblNewLabel_1.setFont(new Font("Arial", Font.PLAIN, 20));
         lblNewLabel_1.setBounds(33, 139, 110, 41);
         jPanel.add(lblNewLabel_1);
@@ -280,7 +266,7 @@ public class MovieJFrame extends JFrame {
         label_4_1_1.setBounds(463, 548, 55, 24);
         jPanel.add(label_4_1_1);
 
-        MovieFrameController movieFrameController = new MovieFrameController(frame,this);
+        MovieFrameController movieFrameController = new MovieFrameController(this,jpnView,COLUMNS,jtfSearch,methodNames,mouseListeners);
 	    if(movieModel == null) movieFrameController.CreateOrUpdate();
         else movieFrameController.setView(movieModel);
     }

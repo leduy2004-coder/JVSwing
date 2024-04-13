@@ -110,4 +110,8 @@ public class MovieModel {
     public String toString() {
         return tenPhim;
     }
+
+    public String getTenLoaiPhim() {
+        return getTypeMovieModel().getTenLPhim();
+    }
 }

@@ -22,7 +22,7 @@ public class EmplManagePanel extends JPanel {
 	/**
 	 * Create the panel.
 	 */
-	public EmplManagePanel(JFrame frame) {
+	public EmplManagePanel() {
 		setLayout(new BorderLayout(0, 0));
 		setBorder(new EmptyBorder(0, 5, 5, 5));
 		JPanel panel = new JPanel();
@@ -89,7 +89,7 @@ public class EmplManagePanel extends JPanel {
 		btnNewButton_1.setFont(new Font("Arial", Font.BOLD, 17));
 		panel_2.add(btnNewButton_1);
 		
-		EmplManageController emplManageController = new EmplManageController(panel_table,btnNewButton,btnNewButton_1,textField,frame);
+		EmplManageController emplManageController = new EmplManageController(panel_table,btnNewButton,btnNewButton_1,textField);
 		
 		JPanel panel_3 = new JPanel();
 		panel_3.setPreferredSize(new Dimension(10, 35));
@@ -106,7 +106,6 @@ public class EmplManagePanel extends JPanel {
 		lblNewLabel_3.setForeground(new Color(255, 0, 0));
 		lblNewLabel_3.setFont(new Font("Arial", Font.ITALIC, 14));
 		panel_3.add(lblNewLabel_3, BorderLayout.NORTH);
-		emplManageController.setDataToTable();
 		emplManageController.displayView();
 
 		

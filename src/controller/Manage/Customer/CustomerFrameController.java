@@ -3,6 +3,8 @@ package controller.Manage.Customer;
 import Service.impl.CustomerService;
 import com.toedter.calendar.JDateChooser;
 import model.CustomerModel;
+import model.MovieModel;
+import utility.SetTable;
 import view.Manage.CustomerPanel.CustomerManageJFrame;
 import view.Manage.ManagementView;
 
@@ -10,8 +12,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 public class CustomerFrameController {
     private JFrame frame;
@@ -19,10 +23,22 @@ public class CustomerFrameController {
     private CustomerService customerService;
     private CustomerModel customerModel;
     private String msg;
+    private JTable table;
+    private JPanel jpnView;
+    private String[] COLUMNS;
+    private JTextField jtfSearch;
+    private String[] methodNames;
+    private MouseListener[] mouseListeners;
+    SetTable<MovieModel> setTable = SetTable.getInstance();
 
-    public CustomerFrameController(JFrame frame, CustomerManageJFrame customerManageJFrame){
-        this.frame = frame;
+
+    public CustomerFrameController(CustomerManageJFrame customerManageJFrame,JPanel jpnView, String[] COLUMNS, JTextField jtfSearch, String[] methodNames,MouseListener[] mouseListeners){
         this.customer = customerManageJFrame;
+        this.jpnView = jpnView;
+        this.COLUMNS = COLUMNS;
+        this.jtfSearch = jtfSearch;
+        this.methodNames = methodNames;
+        this.mouseListeners = mouseListeners;
         customerService = new CustomerService();
     }
     public void setView(CustomerModel customerModel) {
@@ -63,21 +79,15 @@ public class CustomerFrameController {
                             msg = "Bạn muốn thêm dữ liệu không ?";
                             if(showDialog(msg)){
                                 customerService.save(customerModel);
-                                frame.dispose();
-                                ManagementView managementView = new ManagementView();
-                                managementView.CustomerPage();
-                                managementView.setVisible(true);
                                 customer.dispose();
+                                loadTable();
                             }
                         }else {
                             msg = "Bạn muốn cập nhật dữ liệu không ?";
                             if(showDialog(msg)){
                                 customerService.update(customerModel);
-                                frame.dispose();
-                                ManagementView managementView = new ManagementView();
-                                managementView.CustomerPage();
-                                managementView.setVisible(true);
                                 customer.dispose();
+                                loadTable();
                             }
                         }
                     }
@@ -151,4 +161,14 @@ public class CustomerFrameController {
         return date = sp.format(d);
     }
 
+    private void loadTable(){
+        jpnView.removeAll();
+        jpnView.validate();
+        jpnView.repaint();
+        List<CustomerModel> listItem = customerService.selectAll();
+        table = setTable.setDataToTable(jpnView,COLUMNS,listItem,jtfSearch,methodNames);
+        for (MouseListener listener : mouseListeners) {
+            table.addMouseListener(listener);
+        }
+    }
 }
