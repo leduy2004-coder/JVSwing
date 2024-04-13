@@ -1,6 +1,5 @@
 package view.Employee.TicketPanel;
 
-import controller.Employee.Ticket.TicketController;
 import controller.Employee.Ticket.TicketFrController;
 import view.Manage.EmplPanel.EmplManageJFrame;
 
@@ -176,7 +175,8 @@ public class TicketFrame extends JFrame {
         
         Border border1 = BorderFactory.createLineBorder(Color.BLACK, 1);
 
-        TicketFrController ticketFrController = new TicketFrController(this, frame);
+        TicketFrController ticketFrController = new TicketFrController(frame, this);
+        ticketFrController.CreateOrUpdate();
     }
 	public void setPicture(JButton button, String fileName, int width, int height) {
 		ImageIcon originalIcon = new ImageIcon(EmplManageJFrame.class.getResource(fileName));

@@ -1,3 +1,5 @@
+package controller.Employee.Ticket;
+
 package controller.Employee.Movie;
 
 import java.awt.CardLayout;
@@ -23,13 +25,13 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
-import Service.impl.MovieService;
+import Service.impl.TicketService;
 import model.MovieModel;
+import model.TicketModel;
 import utility.ClassTableModel;
-import view.Employee.EmployeeView;
-import view.Employee.MoviePanel.MovieJFrame;
+import view.Employee.TicketPanel.TicketFrame;
 
-public class MovieController {
+public class TicketController {
     private JFrame frame;
     private JPanel jpnView;
     private JButton btnAdd;
@@ -39,24 +41,24 @@ public class MovieController {
     private ClassTableModel classTableModel = null;
     private MovieModel movieModel;
 
-    private final String[] COLUMNS = {"Mã phim", "Tên phim", "Loại phim", "Đạo diễn","Độ tuổi", "Ngày chiếu","Thời lượng", "Trạng thái"};
+    private final String[] COLUMNS = {"STT","Mã vé", "Tên phim", "Số lượng đặt", "Số lượng bán", "Giá 1 vé", "maNV", "Trạng thái"};
 
-    private MovieService movieService = null;
+    private TicketService ticketService = null;
 
     private TableRowSorter<TableModel> rowSorter = null;
 
-    public MovieController(JPanel jpnView, JButton btnAdd, JButton btnRemove, JTextField jtfSearch, JFrame frame) {
+    public TicketController(JPanel jpnView, JButton btnAdd, JButton btnRemove, JTextField jtfSearch, JFrame frame) {
         this.jpnView = jpnView;
         this.btnAdd = btnAdd;
         this.btnRemove = btnRemove;
         this.jtfSearch = jtfSearch;
         this.frame =frame;
         this.classTableModel = new ClassTableModel();
-        this.movieService = new MovieService();
+        this.ticketService = new TicketService();
     }
     public void setDataToTable() {
-        List<MovieModel> listItem = movieService.selectAll();
-        DefaultTableModel model = classTableModel.setTableMovie(listItem, COLUMNS);
+        List<TicketModel> listItem = ticketService.selectAll();
+        DefaultTableModel model = classTableModel.setTableTicket(listItem, COLUMNS);
         JTable table = new JTable(model);
 
         rowSorter = new TableRowSorter<>(table.getModel());
@@ -97,70 +99,45 @@ public class MovieController {
         jpnView.validate();
         jpnView.repaint();
 
-        eventTable(table);
         remove(table);
     }
-        private void applyFilter() {
-            String text = jtfSearch.getText();
-            if (text.trim().length() == 0) {
-                rowSorter.setRowFilter(null);
-            } else {
-                RowFilter<Object, Object> rowFilter = RowFilter.regexFilter("(?i)" + text, 0);
-                rowSorter.setRowFilter(rowFilter);
-            }
+    private void applyFilter() {
+        String text = jtfSearch.getText();
+        if (text.trim().length() == 0) {
+            rowSorter.setRowFilter(null);
+        } else {
+            RowFilter<Object, Object> rowFilter = RowFilter.regexFilter("(?i)" + text, 0);
+            rowSorter.setRowFilter(rowFilter);
         }
-    
-    public void displayView() {
-    	btnAdd.addMouseListener(new MouseAdapter() {
-			
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				MovieJFrame movieJFrame = new MovieJFrame(movieModel,frame);
-                movieJFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                movieJFrame.setTitle("Thông tin phim");
-                movieJFrame.setVisible(true);
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e) {
-                btnAdd.setBackground(new Color(89, 190, 89));
-                btnAdd.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-                btnAdd.setBackground(new Color(34, 139, 34));
-			}
-		});
-    	
-
     }
-    private void eventTable(JTable table) {
-        table.addMouseListener(new MouseAdapter() {
+
+    public void displayView() {
+        btnAdd.addMouseListener(new MouseAdapter() {
+
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2 && table.getSelectedRow() != -1) {
-                    DefaultTableModel model = (DefaultTableModel) table.getModel();
-                    int selectedRowIndex = table.getSelectedRow();
-
-                    selectedRowIndex = table.convertRowIndexToModel(selectedRowIndex);
-
-                    MovieModel movieModel1 = new MovieModel();
-                    movieModel1.setMaPhim(model.getValueAt(selectedRowIndex, 0).toString());
-                    MovieJFrame jframe = new MovieJFrame( movieService.selectById(movieModel1),frame);
-                    jframe.setLocationRelativeTo(null);
-                    jframe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                    jframe.setResizable(false);
-                    jframe.setTitle("Thông tin phim");
-                    jframe.setVisible(true);
-
-                }
+                TicketFrame ticketFrame = new TicketFrame(frame);
+                ticketFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                ticketFrame.setTitle("Thông tin vé");
+                ticketFrame.setVisible(true);
             }
 
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                btnAdd.setBackground(new Color(89, 190, 89));
+                btnAdd.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                btnAdd.setBackground(new Color(34, 139, 34));
+            }
         });
+
+
     }
     private void remove(JTable table) {
-        MovieModel movieModel = new MovieModel();
+        TicketModel ticketModel = new TicketModel();
         table.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -170,7 +147,7 @@ public class MovieController {
 
                     selectedRowIndex = table.convertRowIndexToModel(selectedRowIndex);
 
-                    movieModel.setMaPhim(model.getValueAt(selectedRowIndex, 0).toString());
+                    ticketModel.setMaVe(model.getValueAt(selectedRowIndex, 1).toString());
 
                 }
             }
@@ -179,10 +156,10 @@ public class MovieController {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if(showDialog()) {
-                    if (movieModel.getMaPhim() == null)
+                    if (ticketModel.getMaVe() == null)
                         JOptionPane.showMessageDialog(null, "Kích chuột vào 1 dòng của table để xóa !!", "Thông báo", JOptionPane.ERROR_MESSAGE);
                     else{
-                        movieService.delete(movieModel);
+                        ticketService.delete(ticketModel);
                         setDataToTable();
                     }
                 }

@@ -1,10 +1,7 @@
 package utility;
 
 import bean.TableStatisticBean;
-import model.CustomerModel;
-import model.EmployeeModel;
-import model.MovieModel;
-import model.ScheduleModel;
+import model.*;
 
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
@@ -169,6 +166,32 @@ public class ClassTableModel {
             obj[2] = table.getTotalDate();
             obj[3] = table.getTotalTicket();
             obj[4] = table.getTotalTurnover();
+            dtm.addRow(obj);
+        }
+        return dtm;
+    }
+    public DefaultTableModel setTableTicket(List<TicketModel> listItem, String[] listColumn) {
+        int columns = listColumn.length;
+        DefaultTableModel dtm = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int rowIndex, int colIndex) {
+                return false;
+            }
+        };
+        dtm.setColumnIdentifiers(listColumn);
+        Object[] obj;
+        TicketModel table = null;
+        for (int i = 0; i < listItem.size(); i++) {
+            table = listItem.get(i);
+            obj = new Object[columns];
+            obj[0] = i+1;
+            obj[1] = table.getMaVe();
+            obj[2] = table.getMovieModel().getTenPhim();
+            obj[3] = table.getSoLuongToiDa();
+            obj[4] = table.getSoLuongDaDat();
+            obj[5] = table.getTien();
+            obj[6] = table.getMaNV();
+            obj[7] = table.isTinhTrang();
             dtm.addRow(obj);
         }
         return dtm;
