@@ -198,7 +198,4 @@ public class EmployeeView extends JFrame {
 	public void HomePage(){
 		controller.setView(homeEmplPanel,homeEmplLabel);
 	}
-	public void MoviePage(){
-		controller.setViewMovie(panel_4_1,lblNewLabel_1);
-	}
 }

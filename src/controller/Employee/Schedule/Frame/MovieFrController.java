@@ -4,15 +4,11 @@ import Service.impl.MovieService;
 import com.toedter.calendar.JDateChooser;
 import model.MovieModel;
 import model.ShiftModel;
-import utility.ClassTableModel;
+import utility.SetTable;
 import view.Employee.SchedulePanel.Frame.RoomFrame;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
-import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -27,10 +23,11 @@ public class MovieFrController {
     private JPanel pnTable;
     private JTextField jtfSearch;
     MovieService movieService = new MovieService();
-    private ClassTableModel classTableModel = null;
+    SetTable<MovieModel> setTable = SetTable.getInstance();
 
     private final String[] COLUMNS = {"Mã Phim","Tên phim"};
-    private TableRowSorter<TableModel> rowSorter = null;
+    String[] methodNames = {"getMaPhim", "getTenPhim"};
+
 
     public MovieFrController(Frame frame, JButton btnNext, JButton btnRemove, JDateChooser jdcDate,ShiftModel shift,JPanel pnTable,JTextField jtfSearch) {
         this.frame = frame;
@@ -40,13 +37,12 @@ public class MovieFrController {
         this.shift = shift;
         this.pnTable = pnTable;
         this.jtfSearch = jtfSearch;
-        this.classTableModel = new ClassTableModel();
+
     }
     public void setDataAndEvent(){
         JTable table = new JTable();
-        List<MovieModel> list = null;
-        list = movieService.selectStatus();
-        table = setDataToTable(list,table);
+        List<MovieModel> list = movieService.selectStatus();
+        table = setTable.setDataToTable(pnTable,COLUMNS,list,jtfSearch,methodNames);
         MovieModel movie = new MovieModel();
         movie = getData(table,movie);
         MovieModel finalMovie = movie;
@@ -91,58 +87,7 @@ public class MovieFrController {
         });
     }
 
-    public JTable setDataToTable(List<MovieModel> listItem, JTable table) {
-        DefaultTableModel model = classTableModel.setTableMovieStatus(listItem, COLUMNS);
-        table = new JTable(model);
 
-        rowSorter = new TableRowSorter<>(table.getModel());
-        table.setRowSorter(rowSorter); //sort
-
-        jtfSearch.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                applyFilter();
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                applyFilter();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-            }
-        });
-
-        // design
-        table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
-        table.getTableHeader().setPreferredSize(new Dimension(100, 29));
-        table.setRowHeight(39);
-        table.getColumnModel().getColumn(0).setPreferredWidth(100);
-        table.getColumnModel().getColumn(1).setPreferredWidth(200);
-        table.validate();
-        table.repaint();
-
-        JScrollPane scroll = new JScrollPane();
-        scroll.getViewport().add(table);
-        scroll.setPreferredSize(new Dimension(1350, 400));
-        pnTable.removeAll();
-        pnTable.setLayout(new CardLayout());
-        pnTable.add(scroll);
-        pnTable.validate();
-        pnTable.repaint();
-
-        return table;
-    }
-    private void applyFilter() {
-        String text = jtfSearch.getText();
-        if (text.trim().length() == 0) {
-            rowSorter.setRowFilter(null);
-        } else {
-            RowFilter<Object, Object> rowFilter = RowFilter.regexFilter("(?i)" + text, 0);
-            rowSorter.setRowFilter(rowFilter);
-        }
-    }
     public MovieModel getData(JTable table, MovieModel movieModel){
         table.addMouseListener(new MouseAdapter() {
             @Override

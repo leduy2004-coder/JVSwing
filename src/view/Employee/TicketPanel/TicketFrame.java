@@ -6,12 +6,12 @@ import view.Manage.EmplPanel.EmplManageJFrame;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.awt.event.MouseListener;
 
 public class TicketFrame extends JFrame {
 
 
 	private static final long serialVersionUID = 1L;
-    private JFrame frame;
     private JPanel contentPane;
     public JButton btnSave;
     public JButton btnExit;
@@ -22,8 +22,9 @@ public class TicketFrame extends JFrame {
     public JLabel lbIdTicket;
     public JLabel lbMovie;
     public JLabel lbIdEmploy;
+    public JTextField search;
 
-	public TicketFrame(JFrame frame) {
+	public TicketFrame(JPanel jpnView, String[] COLUMNS, JTextField jtfSearch, String[] methodNames, MouseListener[] mouseListeners) {
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(250, 100, 1026, 778);
@@ -159,7 +160,7 @@ public class TicketFrame extends JFrame {
         jPanel.add(lbMovie);
         
         panelTable = new JPanel();
-        panelTable.setBounds(10, 108, 980, 309);
+        panelTable.setBounds(10, 153, 980, 264);
         jPanel.add(panelTable);
         
         JLabel lblKchChutVo = new JLabel("Kích chuột vào 1 dòng để chọn");
@@ -173,9 +174,20 @@ public class TicketFrame extends JFrame {
         label_4_1_2.setBounds(482, 542, 55, 24);
         jPanel.add(label_4_1_2);
         
+        JLabel lblNewLabel_1_2_1_4 = new JLabel("Tìm mã");
+        lblNewLabel_1_2_1_4.setFont(new Font("Arial", Font.PLAIN, 20));
+        lblNewLabel_1_2_1_4.setBounds(559, 98, 110, 41);
+        jPanel.add(lblNewLabel_1_2_1_4);
+        
+        search = new JTextField();
+        search.setFont(new Font("Arial", Font.PLAIN, 16));
+        search.setColumns(10);
+        search.setBounds(651, 98, 292, 41);
+        jPanel.add(search);
+        
         Border border1 = BorderFactory.createLineBorder(Color.BLACK, 1);
 
-        TicketFrController ticketFrController = new TicketFrController(frame, this);
+        TicketFrController ticketFrController = new TicketFrController( this,jpnView,COLUMNS,jtfSearch,methodNames,mouseListeners);
         ticketFrController.CreateOrUpdate();
     }
 	public void setPicture(JButton button, String fileName, int width, int height) {

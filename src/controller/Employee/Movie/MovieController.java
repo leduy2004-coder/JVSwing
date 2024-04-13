@@ -1,121 +1,48 @@
 package controller.Employee.Movie;
 
-import java.awt.CardLayout;
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.List;
-
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.RowFilter;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
-import javax.swing.table.TableRowSorter;
-
 import Service.impl.MovieService;
 import model.MovieModel;
-import utility.ClassTableModel;
-import view.Employee.EmployeeView;
+import utility.SetTable;
 import view.Employee.MoviePanel.MovieJFrame;
 
-public class MovieController {
-    private JFrame frame;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.List;
+
+public class MovieController  {
     private JPanel jpnView;
     private JButton btnAdd;
     private JButton btnRemove;
     private JTextField jtfSearch;
-
-    private ClassTableModel classTableModel = null;
     private MovieModel movieModel;
-
+    private MouseListener[] mouseListeners;
+    private JTable table = new JTable();
     private final String[] COLUMNS = {"Mã phim", "Tên phim", "Loại phim", "Đạo diễn","Độ tuổi", "Ngày chiếu","Thời lượng", "Trạng thái"};
-
+    String[] methodNames = {"getMaPhim", "getTenPhim", "getTenLoaiPhim","getDaoDien","getDoTuoi","getNgayKhoiChieu","getThoiLuong","isTinhTrang"};
     private MovieService movieService = null;
 
-    private TableRowSorter<TableModel> rowSorter = null;
+    SetTable<MovieModel> setTable = SetTable.getInstance();
 
-    public MovieController(JPanel jpnView, JButton btnAdd, JButton btnRemove, JTextField jtfSearch, JFrame frame) {
+    public MovieController(JPanel jpnView, JButton btnAdd, JButton btnRemove, JTextField jtfSearch) {
         this.jpnView = jpnView;
         this.btnAdd = btnAdd;
         this.btnRemove = btnRemove;
         this.jtfSearch = jtfSearch;
-        this.frame =frame;
-        this.classTableModel = new ClassTableModel();
         this.movieService = new MovieService();
     }
-    public void setDataToTable() {
-        List<MovieModel> listItem = movieService.selectAll();
-        DefaultTableModel model = classTableModel.setTableMovie(listItem, COLUMNS);
-        JTable table = new JTable(model);
 
-        rowSorter = new TableRowSorter<>(table.getModel());
-        table.setRowSorter(rowSorter); //sort
-
-        jtfSearch.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                applyFilter();
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                applyFilter();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-            }
-        });
-
-        // design
-        table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
-        table.getTableHeader().setPreferredSize(new Dimension(100, 29));
-        table.setRowHeight(39);
-        table.getColumnModel().getColumn(0).setPreferredWidth(100);
-        table.getColumnModel().getColumn(1).setPreferredWidth(100);
-        table.getColumnModel().getColumn(2).setPreferredWidth(100);
-        table.validate();
-        table.repaint();
-
-        JScrollPane scroll = new JScrollPane();
-        scroll.getViewport().add(table);
-        scroll.setPreferredSize(new Dimension(1350, 400));
-        jpnView.removeAll();
-        jpnView.setLayout(new CardLayout());
-        jpnView.add(scroll);
-        jpnView.validate();
-        jpnView.repaint();
-
-        eventTable(table);
-        remove(table);
-    }
-        private void applyFilter() {
-            String text = jtfSearch.getText();
-            if (text.trim().length() == 0) {
-                rowSorter.setRowFilter(null);
-            } else {
-                RowFilter<Object, Object> rowFilter = RowFilter.regexFilter("(?i)" + text, 0);
-                rowSorter.setRowFilter(rowFilter);
-            }
-        }
-    
     public void displayView() {
+        List<MovieModel> listItem = movieService.selectAll();
+        table = setTable.setDataToTable(jpnView,COLUMNS,listItem,jtfSearch,methodNames);
     	btnAdd.addMouseListener(new MouseAdapter() {
 			
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				MovieJFrame movieJFrame = new MovieJFrame(movieModel,frame);
+				MovieJFrame movieJFrame = new MovieJFrame(movieModel,jpnView,COLUMNS,jtfSearch,methodNames,mouseListeners);
                 movieJFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 movieJFrame.setTitle("Thông tin phim");
                 movieJFrame.setVisible(true);
@@ -133,7 +60,9 @@ public class MovieController {
 			}
 		});
     	
-
+        eventTable(table);
+        remove(table);
+        mouseListeners = table.getMouseListeners();
     }
     private void eventTable(JTable table) {
         table.addMouseListener(new MouseAdapter() {
@@ -147,7 +76,7 @@ public class MovieController {
 
                     MovieModel movieModel1 = new MovieModel();
                     movieModel1.setMaPhim(model.getValueAt(selectedRowIndex, 0).toString());
-                    MovieJFrame jframe = new MovieJFrame( movieService.selectById(movieModel1),frame);
+                    MovieJFrame jframe = new MovieJFrame( movieService.selectById(movieModel1),jpnView,COLUMNS,jtfSearch,methodNames,mouseListeners);
                     jframe.setLocationRelativeTo(null);
                     jframe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                     jframe.setResizable(false);
@@ -183,7 +112,7 @@ public class MovieController {
                         JOptionPane.showMessageDialog(null, "Kích chuột vào 1 dòng của table để xóa !!", "Thông báo", JOptionPane.ERROR_MESSAGE);
                     else{
                         movieService.delete(movieModel);
-                        setDataToTable();
+                        loadTable();
                     }
                 }
             }
@@ -204,6 +133,13 @@ public class MovieController {
         int dialogResult = JOptionPane.showConfirmDialog(null,
                 "Bạn có muốn xóa không ?", "Thông báo", JOptionPane.YES_NO_OPTION);
         return dialogResult == JOptionPane.YES_OPTION;
+    }
+    private void loadTable(){
+        List<MovieModel> listItem = movieService.selectAll();
+        table = setTable.setDataToTable(jpnView,COLUMNS,listItem,jtfSearch,methodNames);
+        for (MouseListener listener : mouseListeners) {
+            table.addMouseListener(listener);
+        }
     }
 
 }

@@ -42,17 +42,7 @@ public class MoveEmplController {
         root.repaint();
         exit();
     }
-    public void setViewMovie(JPanel jPanelItem, JLabel jLabelItem){
-        kindSelect = "Phim";
-        jPanelItem.setBackground(new Color(96, 100, 191));
-        jLabelItem.setBackground(new Color(96, 100, 191));
-        root.removeAll();
-        root.setLayout(new BorderLayout());
-        root.add(new MoviePanel(frame));
-        root.validate();
-        root.repaint();
-        exit();
-    }
+
 
     public void setEvent(List<ListBean> listItem) {
         this.listItem = listItem;
@@ -83,10 +73,10 @@ public class MoveEmplController {
                 case "Vé":
                     break;
                 case "Phim":
-                  node = new MoviePanel(frame);
+                  node = new MoviePanel();
                     break;
                 case "Suất chiếu":
-                	node = new SchedulePanel(frame);
+                	node = new SchedulePanel();
                 	 break;
                 default:
                     break;

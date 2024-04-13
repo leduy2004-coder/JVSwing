@@ -2,7 +2,9 @@ package controller.Manage.Customer;
 
 import Service.impl.CustomerService;
 import model.CustomerModel;
+import model.MovieModel;
 import utility.ClassTableModel;
+import utility.SetTable;
 import view.Manage.CustomerPanel.CustomerManageJFrame;
 import view.Manage.ManagementView;
 
@@ -15,6 +17,7 @@ import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.sql.Date;
 import java.util.List;
 
@@ -25,86 +28,35 @@ public class CustomerManageController {
     private JButton btnRemove;
     private JTextField jtfSearch;
 
-    private ClassTableModel classTableModel = null;
     private CustomerModel customerModel;
+    private MouseListener[] mouseListeners;
+    private JTable table = new JTable();
+    SetTable<MovieModel> setTable = SetTable.getInstance();
+
 
     private final String[] COLUMNS = {"Mã khách hàng", "Tên khách hàng", "Số điện thoại", "Ngày sinh", "Email", "Trạng thái", "Tài khoản", "Mật khẩu"};
+    String[] methodNames = {"getMaKH", "getHoTen", "getSdt","getNgaySinh","getEmail","isTinhTrang","getTentk","getMatKhau"};
 
-    private CustomerService customerService = null;
+    private CustomerService customerService;
 
-    private TableRowSorter<TableModel> rowSorter = null;
 
-    public CustomerManageController(JPanel jpnView, JButton btnAdd, JButton btnRemove, JTextField jtfSearch, JFrame frame) {
+    public CustomerManageController(JPanel jpnView, JButton btnAdd, JButton btnRemove, JTextField jtfSearch) {
         this.jpnView = jpnView;
         this.btnAdd = btnAdd;
         this.btnRemove = btnRemove;
         this.jtfSearch = jtfSearch;
-        this.frame =frame;
-        this.classTableModel = new ClassTableModel();
         this.customerService = new CustomerService();
-    }
-    public void setDataToTable() {
-        List<CustomerModel> listItem = customerService.selectAll();
-        DefaultTableModel model = classTableModel.setTableCustomer(listItem, COLUMNS);
-        JTable table = new JTable(model);
-
-        rowSorter = new TableRowSorter<>(table.getModel());
-        table.setRowSorter(rowSorter); //sort
-
-        jtfSearch.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                applyFilter();
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                applyFilter();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-            }
-        });
-
-        // design
-        table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
-        table.getTableHeader().setPreferredSize(new Dimension(100, 29));
-        table.setRowHeight(39);
-        table.getColumnModel().getColumn(0).setPreferredWidth(100);
-        table.getColumnModel().getColumn(1).setPreferredWidth(100);
-        table.getColumnModel().getColumn(2).setPreferredWidth(100);
-        table.validate();
-        table.repaint();
-
-        JScrollPane scroll = new JScrollPane();
-        scroll.getViewport().add(table);
-        scroll.setPreferredSize(new Dimension(1350, 400));
-        jpnView.removeAll();
-        jpnView.setLayout(new CardLayout());
-        jpnView.add(scroll);
-        jpnView.validate();
-        jpnView.repaint();
-
-        eventTable(table);
-        remove(table);
-    }
-    private void applyFilter() {
-        String text = jtfSearch.getText();
-        if (text.trim().length() == 0) {
-            rowSorter.setRowFilter(null);
-        } else {
-            RowFilter<Object, Object> rowFilter = RowFilter.regexFilter("(?i)" + text, 0);
-            rowSorter.setRowFilter(rowFilter);
-        }
     }
 
     public void displayView() {
+        List<CustomerModel> listItem = customerService.selectAll();
+        table = setTable.setDataToTable(jpnView,COLUMNS,listItem,jtfSearch,methodNames);
+
         btnAdd.addMouseListener(new MouseAdapter() {
 
             @Override
             public void mouseClicked(MouseEvent e) {
-                CustomerManageJFrame customerManageJFrame = new CustomerManageJFrame(customerModel,frame);
+                CustomerManageJFrame customerManageJFrame = new CustomerManageJFrame(customerModel,jpnView,COLUMNS,jtfSearch,methodNames,mouseListeners);
                 customerManageJFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 customerManageJFrame.setTitle("Thông tin khách hàng");
                 customerManageJFrame.setVisible(true);
@@ -122,7 +74,9 @@ public class CustomerManageController {
             }
         });
 
-
+        eventTable(table);
+        remove(table);
+        mouseListeners = table.getMouseListeners();
     }
     private void eventTable(JTable table) {
         table.addMouseListener(new MouseAdapter() {
@@ -146,7 +100,7 @@ public class CustomerManageController {
                     customerModel.setTentk(model.getValueAt(selectedRowIndex, 6).toString());
                     customerModel.setMatKhau(model.getValueAt(selectedRowIndex, 7).toString());
 
-                    CustomerManageJFrame jframe = new CustomerManageJFrame(customerModel,frame);
+                    CustomerManageJFrame jframe = new CustomerManageJFrame(customerModel,jpnView,COLUMNS,jtfSearch,methodNames,mouseListeners);
                     jframe.setLocationRelativeTo(null);
                     jframe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                     jframe.setResizable(false);
@@ -178,13 +132,13 @@ public class CustomerManageController {
         btnRemove.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                int check = 0;
                 if(showDialog()) {
-                    check = customerService.delete(customerModel);
+
                     if (customerModel.getMaKH() == null)
                         JOptionPane.showMessageDialog(null, "Kích chuột vào 1 dòng của table để xóa !!", "Thông báo", JOptionPane.ERROR_MESSAGE);
                     else {
-                        setDataToTable();
+                        customerService.delete(customerModel);
+                        loadTable();
                     }
                 }
             }
@@ -205,6 +159,13 @@ public class CustomerManageController {
         int dialogResult = JOptionPane.showConfirmDialog(null,
                 "Bạn có muốn xóa không ?", "Thông báo", JOptionPane.YES_NO_OPTION);
         return dialogResult == JOptionPane.YES_OPTION;
+    }
+    private void loadTable(){
+        List<CustomerModel> listItem = customerService.selectAll();
+        table = setTable.setDataToTable(jpnView,COLUMNS,listItem,jtfSearch,methodNames);
+        for (MouseListener listener : mouseListeners) {
+            table.addMouseListener(listener);
+        }
     }
 
 }

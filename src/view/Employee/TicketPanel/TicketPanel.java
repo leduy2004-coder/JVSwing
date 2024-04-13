@@ -99,8 +99,7 @@ public class TicketPanel extends JPanel {
 		lblNewLabel_3.setFont(new Font("Arial", Font.ITALIC, 14));
 		panel_3.add(lblNewLabel_3, BorderLayout.NORTH);
 
-		TicketController ticketController = new TicketController(panel_table,btnNewButton,btnNewButton_1,textField,frame);
-		ticketController.setDataToTable();
+		TicketController ticketController = new TicketController(panel_table,btnNewButton,btnNewButton_1,textField);
 		ticketController.displayView();
 		
 	}

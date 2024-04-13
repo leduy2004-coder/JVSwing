@@ -1,122 +1,59 @@
 package controller.Employee.Ticket;
 
-package controller.Employee.Movie;
+import Service.impl.TicketService;
+import model.MovieModel;
+import model.TicketModel;
+import utility.ClassTableModel;
+import utility.SetTable;
+import view.Employee.TicketPanel.TicketFrame;
 
-import java.awt.CardLayout;
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.List;
-
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.RowFilter;
+import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
-
-import Service.impl.TicketService;
-import model.MovieModel;
-import model.TicketModel;
-import utility.ClassTableModel;
-import view.Employee.TicketPanel.TicketFrame;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.List;
 
 public class TicketController {
-    private JFrame frame;
     private JPanel jpnView;
     private JButton btnAdd;
     private JButton btnRemove;
     private JTextField jtfSearch;
+    private JTable table = new JTable();
 
+    private MouseListener[] mouseListeners;
     private ClassTableModel classTableModel = null;
     private MovieModel movieModel;
 
-    private final String[] COLUMNS = {"STT","Mã vé", "Tên phim", "Số lượng đặt", "Số lượng bán", "Giá 1 vé", "maNV", "Trạng thái"};
+    private final String[] COLUMNS = {"Mã vé", "Tên phim", "Số lượng đặt", "Số lượng bán", "Giá 1 vé", "maNV", "Trạng thái"};
+    String[] methodNames = {"getMaVe", "getTenPhim", "getSoLuongToiDa","getSoLuongDaBan","getTien","getMaNV","isTinhTrang"};
 
     private TicketService ticketService = null;
 
-    private TableRowSorter<TableModel> rowSorter = null;
+    SetTable<MovieModel> setTable = SetTable.getInstance();
 
-    public TicketController(JPanel jpnView, JButton btnAdd, JButton btnRemove, JTextField jtfSearch, JFrame frame) {
+    public TicketController(JPanel jpnView, JButton btnAdd, JButton btnRemove, JTextField jtfSearch) {
         this.jpnView = jpnView;
         this.btnAdd = btnAdd;
         this.btnRemove = btnRemove;
         this.jtfSearch = jtfSearch;
-        this.frame =frame;
         this.classTableModel = new ClassTableModel();
         this.ticketService = new TicketService();
     }
-    public void setDataToTable() {
-        List<TicketModel> listItem = ticketService.selectAll();
-        DefaultTableModel model = classTableModel.setTableTicket(listItem, COLUMNS);
-        JTable table = new JTable(model);
-
-        rowSorter = new TableRowSorter<>(table.getModel());
-        table.setRowSorter(rowSorter); //sort
-
-        jtfSearch.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                applyFilter();
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                applyFilter();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-            }
-        });
-
-        // design
-        table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
-        table.getTableHeader().setPreferredSize(new Dimension(100, 29));
-        table.setRowHeight(39);
-        table.getColumnModel().getColumn(0).setPreferredWidth(100);
-        table.getColumnModel().getColumn(1).setPreferredWidth(100);
-        table.getColumnModel().getColumn(2).setPreferredWidth(100);
-        table.validate();
-        table.repaint();
-
-        JScrollPane scroll = new JScrollPane();
-        scroll.getViewport().add(table);
-        scroll.setPreferredSize(new Dimension(1350, 400));
-        jpnView.removeAll();
-        jpnView.setLayout(new CardLayout());
-        jpnView.add(scroll);
-        jpnView.validate();
-        jpnView.repaint();
-
-        remove(table);
-    }
-    private void applyFilter() {
-        String text = jtfSearch.getText();
-        if (text.trim().length() == 0) {
-            rowSorter.setRowFilter(null);
-        } else {
-            RowFilter<Object, Object> rowFilter = RowFilter.regexFilter("(?i)" + text, 0);
-            rowSorter.setRowFilter(rowFilter);
-        }
-    }
 
     public void displayView() {
+        List<TicketModel> listItem = ticketService.selectAll();
+        table = setTable.setDataToTable(jpnView,COLUMNS,listItem,jtfSearch,methodNames);
         btnAdd.addMouseListener(new MouseAdapter() {
 
             @Override
             public void mouseClicked(MouseEvent e) {
-                TicketFrame ticketFrame = new TicketFrame(frame);
+                TicketFrame ticketFrame = new TicketFrame(jpnView,COLUMNS,jtfSearch,methodNames,mouseListeners);
                 ticketFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 ticketFrame.setTitle("Thông tin vé");
                 ticketFrame.setVisible(true);
@@ -134,7 +71,8 @@ public class TicketController {
             }
         });
 
-
+        remove(table);
+        mouseListeners = table.getMouseListeners();
     }
     private void remove(JTable table) {
         TicketModel ticketModel = new TicketModel();
@@ -160,7 +98,7 @@ public class TicketController {
                         JOptionPane.showMessageDialog(null, "Kích chuột vào 1 dòng của table để xóa !!", "Thông báo", JOptionPane.ERROR_MESSAGE);
                     else{
                         ticketService.delete(ticketModel);
-                        setDataToTable();
+                        loadTable();
                     }
                 }
             }
@@ -181,6 +119,13 @@ public class TicketController {
         int dialogResult = JOptionPane.showConfirmDialog(null,
                 "Bạn có muốn xóa không ?", "Thông báo", JOptionPane.YES_NO_OPTION);
         return dialogResult == JOptionPane.YES_OPTION;
+    }
+    private void loadTable(){
+        List<TicketModel> listItem = ticketService.selectAll();
+        table = setTable.setDataToTable(jpnView,COLUMNS,listItem,jtfSearch,methodNames);
+        for (MouseListener listener : mouseListeners) {
+            table.addMouseListener(listener);
+        }
     }
 
 }

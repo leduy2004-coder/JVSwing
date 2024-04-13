@@ -17,6 +17,7 @@ import controller.Employee.Schedule.ScheduleController;
 import model.MovieModel;
 import model.ShiftModel;
 import view.Employee.HomeEmplPanel;
+import java.awt.Insets;
 
 public class SchedulePanel extends JPanel {
 
@@ -31,9 +32,10 @@ public class SchedulePanel extends JPanel {
 	public JButton btnSave;
 	public JButton btnRemove;
 	public JPanel panelFrmtable;
+	public JTextField jtfSearch;
 
 
-	public SchedulePanel(JFrame frame) {
+	public SchedulePanel() {
 		setLayout(new BorderLayout(0, 0));
 		setBorder(new EmptyBorder(0, 5, 5, 5));
 		JPanel panel = new JPanel();
@@ -79,6 +81,27 @@ public class SchedulePanel extends JPanel {
 		JPanel panel_14 = new JPanel();
 		panel_14.setPreferredSize(new Dimension(10, 130));
 		table.add(panel_14, BorderLayout.SOUTH);
+		
+		JLabel lblNewLabel_7_1 = new JLabel("Tìm mã");
+		lblNewLabel_7_1.setFont(new Font("Arial", Font.PLAIN, 21));
+		panel_14.add(lblNewLabel_7_1);
+		
+		Component horizontalStrut_9 = Box.createHorizontalStrut(20);
+		horizontalStrut_9.setPreferredSize(new Dimension(10, 0));
+		horizontalStrut_9.setMinimumSize(new Dimension(10, 0));
+		panel_14.add(horizontalStrut_9);
+		
+		jtfSearch = new JTextField();
+		jtfSearch.setFont(new Font("Arial", Font.PLAIN, 16));
+		jtfSearch.setMargin(new Insets(2, 15, 2, 5));
+		jtfSearch.setMinimumSize(new Dimension(100, 19));
+		jtfSearch.setPreferredSize(new Dimension(80, 27));
+		panel_14.add(jtfSearch);
+		jtfSearch.setColumns(10);
+		
+		Component horizontalStrut_8 = Box.createHorizontalStrut(20);
+		horizontalStrut_8.setPreferredSize(new Dimension(90, 0));
+		panel_14.add(horizontalStrut_8);
 		
 		btnRemove = new JButton("- Xóa");
 		panel_14.add(btnRemove);

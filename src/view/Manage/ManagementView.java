@@ -187,10 +187,5 @@ public class ManagementView extends JFrame {
 	public void HomePage(){
 		controller.setView(homeManagePanel,homeManageLabel);
 	}
-	public void EmplPage(){
-		controller.setViewEmpl(emplManagePanel,emplManageLabel);
-	}
-	public void CustomerPage(){
-		controller.setViewCustomer(customerManagePanel,customerManageLabel);
-	}
+
 }

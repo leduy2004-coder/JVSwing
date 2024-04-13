@@ -23,7 +23,7 @@ public class CustomerManagePanel extends JPanel {
 	/**
 	 * Create the panel.
 	 */
-	public CustomerManagePanel(JFrame frame) {
+	public CustomerManagePanel() {
 		setLayout(new BorderLayout(0, 0));
 		setBorder(new EmptyBorder(0, 5, 5, 5));
 		JPanel panel = new JPanel();
@@ -106,8 +106,7 @@ public class CustomerManagePanel extends JPanel {
 		lblNewLabel_3.setFont(new Font("Arial", Font.ITALIC, 14));
 		panel_3.add(lblNewLabel_3, BorderLayout.NORTH);
 		
-		CustomerManageController customerManageController = new CustomerManageController(panel_table,btnNewButton,btnNewButton_1,textField,frame);
-		customerManageController.setDataToTable();
+		CustomerManageController customerManageController = new CustomerManageController(panel_table,btnNewButton,btnNewButton_1,textField);
 		customerManageController.displayView();
 		
 	}

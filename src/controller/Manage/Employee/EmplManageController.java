@@ -1,8 +1,11 @@
 package controller.Manage.Employee;
 
 import Service.impl.EmployeeService;
+import model.CustomerModel;
 import model.EmployeeModel;
+import model.MovieModel;
 import utility.ClassTableModel;
+import utility.SetTable;
 import view.Manage.EmplPanel.EmplManageJFrame;
 import view.Manage.ManagementView;
 
@@ -15,6 +18,7 @@ import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.sql.Date;
 import java.util.List;
 
@@ -24,86 +28,37 @@ public class EmplManageController {
     private JButton btnAdd;
     private JButton btnRemove;
     private JTextField jtfSearch;
-    
-    private ClassTableModel classTableModel = null;
+
     private EmployeeModel employeeModel;
+    private MouseListener[] mouseListeners;
+    private JTable table = new JTable();
+    SetTable<MovieModel> setTable = SetTable.getInstance();
 
     private final String[] COLUMNS = {"Mã nhân viên", "Tên nhân viên", "Số điện thoại", "Giới tính","Ngày sinh", "Địa chỉ","CCCD", "Trạng thái", "Tài khoản", "Mật khẩu"};
+    String[] methodNames = {"getMaNV", "getHoTen", "getSdt","isGioiTinh","getNgaySinh","getDiaChi","getCCCD","isTinhTrang","getTentk","getMatKhau"};
+
+//    obj[3] = employeeModel.isGioiTinh() ? "Nam" : "Nữ";
+
 
     private EmployeeService employeeService = null;
 
-    private TableRowSorter<TableModel> rowSorter = null;
 
-    public EmplManageController(JPanel jpnView, JButton btnAdd, JButton btnRemove, JTextField jtfSearch, JFrame frame) {
+    public EmplManageController(JPanel jpnView, JButton btnAdd, JButton btnRemove, JTextField jtfSearch) {
         this.jpnView = jpnView;
         this.btnAdd = btnAdd;
         this.btnRemove = btnRemove;
         this.jtfSearch = jtfSearch;
-        this.frame =frame;
-        this.classTableModel = new ClassTableModel();
         this.employeeService = new EmployeeService();
-    }
-    public void setDataToTable() {
-        List<EmployeeModel> listItem = employeeService.selectAll();
-        DefaultTableModel model = classTableModel.setTableEmpl(listItem, COLUMNS);
-        JTable table = new JTable(model);
-
-        rowSorter = new TableRowSorter<>(table.getModel());
-        table.setRowSorter(rowSorter); //sort
-
-        jtfSearch.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                applyFilter();
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                applyFilter();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-            }
-        });
-
-        table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
-        table.getTableHeader().setPreferredSize(new Dimension(100, 29));
-        table.setRowHeight(39);
-        table.getColumnModel().getColumn(0).setPreferredWidth(100);
-        table.getColumnModel().getColumn(1).setPreferredWidth(100);
-        table.getColumnModel().getColumn(2).setPreferredWidth(100);
-        table.validate();
-        table.repaint();
-
-        JScrollPane scroll = new JScrollPane();
-        scroll.getViewport().add(table);
-        scroll.setPreferredSize(new Dimension(1350, 400));
-        jpnView.removeAll();
-        jpnView.setLayout(new CardLayout());
-        jpnView.add(scroll);
-        jpnView.validate();
-        jpnView.repaint();
-
-        eventTable(table);
-        remove(table);
-    }
-    private void applyFilter() {
-        String text = jtfSearch.getText();
-        if (text.trim().length() == 0) {
-            rowSorter.setRowFilter(null);
-        } else {
-            RowFilter<Object, Object> rowFilter = RowFilter.regexFilter("(?i)" + text, 0);
-            rowSorter.setRowFilter(rowFilter);
-        }
     }
     
     public void displayView() {
+        List<EmployeeModel> listItem = employeeService.selectAll();
+        table = setTable.setDataToTable(jpnView,COLUMNS,listItem,jtfSearch,methodNames);
     	btnAdd.addMouseListener(new MouseAdapter() {
 			
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				EmplManageJFrame emplManageJFrame = new EmplManageJFrame(employeeModel,frame);
+				EmplManageJFrame emplManageJFrame = new EmplManageJFrame(employeeModel,jpnView,COLUMNS,jtfSearch,methodNames,mouseListeners);
 				emplManageJFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 emplManageJFrame.setTitle("Thông tin nhân viên");
 				emplManageJFrame.setVisible(true);
@@ -120,7 +75,9 @@ public class EmplManageController {
                 btnAdd.setBackground(new Color(34, 139, 34));
 			}
 		});
-    	
+        eventTable(table);
+        remove(table);
+        mouseListeners = table.getMouseListeners();
 
     }
     private void eventTable(JTable table) {
@@ -148,7 +105,7 @@ public class EmplManageController {
                     employeeModel.setTentk(model.getValueAt(selectedRowIndex, 8).toString());
                     employeeModel.setMatKhau(model.getValueAt(selectedRowIndex, 9).toString());
 
-                    EmplManageJFrame jframe = new EmplManageJFrame(employeeModel,frame);
+                    EmplManageJFrame jframe = new EmplManageJFrame(employeeModel,jpnView,COLUMNS,jtfSearch,methodNames,mouseListeners);
                     jframe.setLocationRelativeTo(null);
                     jframe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                     jframe.setResizable(false);
@@ -180,13 +137,12 @@ public class EmplManageController {
         btnRemove.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                int check = 0;
                 if(showDialog()) {
-                    check = employeeService.delete(employeeModel);
                     if (employeeModel.getMaNV() == null)
                         JOptionPane.showMessageDialog(null, "Kích chuột vào 1 dòng của table để xóa !!", "Thông báo", JOptionPane.ERROR_MESSAGE);
                     else{
-                        setDataToTable();
+                        employeeService.delete(employeeModel);
+                        loadTable();
                     }
                 }
             }
@@ -209,4 +165,11 @@ public class EmplManageController {
         return dialogResult == JOptionPane.YES_OPTION;
     }
 
+    private void loadTable(){
+        List<EmployeeModel> listItem = employeeService.selectAll();
+        table = setTable.setDataToTable(jpnView,COLUMNS,listItem,jtfSearch,methodNames);
+        for (MouseListener listener : mouseListeners) {
+            table.addMouseListener(listener);
+        }
+    }
 }

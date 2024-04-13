@@ -30,7 +30,7 @@ public class MoviePanel extends JPanel {
 	/**
 	 * Create the panel.
 	 */
-	public MoviePanel(JFrame frame) {
+	public MoviePanel() {
 		setLayout(new BorderLayout(0, 0));
 		setBorder(new EmptyBorder(0, 5, 5, 5));
 		JPanel panel = new JPanel();
@@ -113,8 +113,7 @@ public class MoviePanel extends JPanel {
 		lblNewLabel_3.setFont(new Font("Arial", Font.ITALIC, 14));
 		panel_3.add(lblNewLabel_3, BorderLayout.NORTH);
 
-		MovieController movieController = new MovieController(panel_table,btnNewButton,btnNewButton_1,textField,frame);
-		movieController.setDataToTable();
+		MovieController movieController = new MovieController(panel_table,btnNewButton,btnNewButton_1,textField);
 		movieController.displayView();
 		
 	}

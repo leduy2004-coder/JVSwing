@@ -4,14 +4,12 @@ import Service.impl.ScheduleService;
 import model.MovieModel;
 import model.ScheduleModel;
 import model.ShiftModel;
-import utility.ClassTableModel;
+import utility.SetTable;
 import view.Employee.SchedulePanel.Frame.TimeFrame;
 import view.Employee.SchedulePanel.SchedulePanel;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
-import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -29,22 +27,27 @@ public class ScheduleController {
     private ScheduleModel scheduleModel;
     private ShiftModel shiftModel;
     private MovieModel movieModel;
-    private ClassTableModel classTableModel = null;
+    private MouseListener[] mouseListeners;
 
-    private final String[] COLUMNS = {"STT","Mã SC","Ngày chiếu"};
-    private TableRowSorter<TableModel> rowSorter = null;
-    int a,b,c;
 
-    public ScheduleController(SchedulePanel sche){
-        this.sche =sche;
-        scheduleService =  new ScheduleService();
+    private final String[] COLUMNS = {"Mã SC", "Ngày chiếu"};
+    String[] methodNames = {"getMaSC", "getNgayChieu"};
+    SetTable<MovieModel> setTable = SetTable.getInstance();
+    private JTable table = new JTable();
+
+
+    int a, b, c;
+
+    public ScheduleController(SchedulePanel sche) {
+        this.sche = sche;
+        scheduleService = new ScheduleService();
         scheduleModel = new ScheduleModel();
         shiftModel = new ShiftModel();
         movieModel = new MovieModel();
-        this.classTableModel = new ClassTableModel();
         b = 0;
     }
-    public void setData(){
+
+    public void setData() {
         sche.btnFilter.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -54,35 +57,35 @@ public class ScheduleController {
                 sche.panelFrmtable.removeAll();
                 sche.panelFrmtable.validate();
                 sche.panelFrmtable.repaint();
-                if(sche.jdcBegin.getDate()!=null&&sche.jdcEnd.getDate()!=null){
-                    if((sche.jdcBegin.getDate()).compareTo(sche.jdcEnd.getDate())<=0) {
+                if (sche.jdcBegin.getDate() != null && sche.jdcEnd.getDate() != null) {
+                    if ((sche.jdcBegin.getDate()).compareTo(sche.jdcEnd.getDate()) <= 0) {
                         List<ScheduleModel> list = new ArrayList<>();
-                        list = scheduleService.selectAllDate(covertDateToDateSql(sche.jdcBegin.getDate()),covertDateToDateSql(sche.jdcEnd.getDate()));
-                        if(list.size()>0){
+                        list = scheduleService.selectAllDate(covertDateToDateSql(sche.jdcBegin.getDate()), covertDateToDateSql(sche.jdcEnd.getDate()));
+                        if (list.size() > 0) {
                             sche.jbxShift.removeAllItems();
                             sche.jbxShift.addItem(new ShiftModel());
                             sche.jbxName.removeAllItems();
                             sche.jbxName.addItem(new MovieModel());
                             sche.jbxRoom.removeAllItems();
                             sche.jbxRoom.addItem("");
-                            for (ScheduleModel s:list) {
+                            for (ScheduleModel s : list) {
                                 movieModel = scheduleService.selectByMPhim(s);
                                 shiftModel = scheduleService.selectByMCa(s);
-                                if(!containItem(sche.jbxName,movieModel.getTenPhim()))
+                                if (!containItem(sche.jbxName, movieModel.getTenPhim()))
                                     sche.jbxName.addItem(movieModel);
-                                if(!containItem(sche.jbxShift,shiftModel.getTenCa()))
+                                if (!containItem(sche.jbxShift, shiftModel.getTenCa()))
                                     sche.jbxShift.addItem(shiftModel);
-                                if(!containItem(sche.jbxRoom,s.getMaPhong()))
+                                if (!containItem(sche.jbxRoom, s.getMaPhong()))
                                     sche.jbxRoom.addItem(s.getMaPhong());
                             }
-                        }else{
-                            JOptionPane.showMessageDialog(null,"Không tìm thấy suất chiếu !!","Thông báo",JOptionPane.ERROR_MESSAGE);
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Không tìm thấy suất chiếu !!", "Thông báo", JOptionPane.ERROR_MESSAGE);
                         }
-                    }else {
-                        JOptionPane.showMessageDialog(null,"Ngày bắt đầu phải nhỏ hơn ngày kết thúc !!","Thông báo",JOptionPane.ERROR_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Ngày bắt đầu phải nhỏ hơn ngày kết thúc !!", "Thông báo", JOptionPane.ERROR_MESSAGE);
                     }
-                }else {
-                    JOptionPane.showMessageDialog(null,"Phải chọn đầy đủ ngày bắt đầu và kết thúc !!","Thông báo",JOptionPane.ERROR_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Phải chọn đầy đủ ngày bắt đầu và kết thúc !!", "Thông báo", JOptionPane.ERROR_MESSAGE);
                 }
             }
 
@@ -102,15 +105,17 @@ public class ScheduleController {
                 sche.panelFrmtable.removeAll();
                 sche.panelFrmtable.validate();
                 sche.panelFrmtable.repaint();
-                if(check()){
+                if (check()) {
                     List<ScheduleModel> listItem = new ArrayList<>();
                     listItem = getAll();
-                    if(listItem.size() >0){
-                        setDataToTable(listItem);
-                    }else
-                        JOptionPane.showMessageDialog(null,"Không tìm thấy suất chiếu !!","Thông báo",JOptionPane.ERROR_MESSAGE);
-                }else
-                    JOptionPane.showMessageDialog(null,"Phải chọn đầy đủ dữ liệu !!","Thông báo",JOptionPane.ERROR_MESSAGE);
+                    if (listItem.size() > 0) {
+                        table = setTable.setDataToTable(sche.panelFrmtable, COLUMNS, listItem, sche.jtfSearch, methodNames);
+                        remove(table);
+                        mouseListeners = table.getMouseListeners();
+                    } else
+                        JOptionPane.showMessageDialog(null, "Không tìm thấy suất chiếu !!", "Thông báo", JOptionPane.ERROR_MESSAGE);
+                } else
+                    JOptionPane.showMessageDialog(null, "Phải chọn đầy đủ dữ liệu !!", "Thông báo", JOptionPane.ERROR_MESSAGE);
             }
 
             @Override
@@ -124,18 +129,19 @@ public class ScheduleController {
             }
         });
     }
+
     public boolean containItem(JComboBox<?> comboBox, String target) {
         int itemCount = comboBox.getItemCount();
         for (int i = 1; i < itemCount; i++) {
             Object item = comboBox.getItemAt(i);
-            if(item != null){
-                if(item instanceof MovieModel){
+            if (item != null) {
+                if (item instanceof MovieModel) {
                     if (((MovieModel) item).getTenPhim().equals(target))
                         return true;
-                }else if(item instanceof ShiftModel){
+                } else if (item instanceof ShiftModel) {
                     if (((ShiftModel) item).getTenCa().equals(target))
                         return true;
-                }else if(item instanceof String){
+                } else if (item instanceof String) {
                     if (((String) item).equals(target))
                         return true;
                 }
@@ -143,7 +149,8 @@ public class ScheduleController {
         }
         return false;
     }
-    public void setEvent(){
+
+    public void setEvent() {
         sche.btnSave.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -163,6 +170,7 @@ public class ScheduleController {
             }
         });
     }
+
     private boolean check() {
         int a = sche.jbxRoom.getSelectedIndex();
         boolean isRoomSelected = a != -1 && !((String) sche.jbxRoom.getItemAt(a)).equals("");
@@ -174,37 +182,13 @@ public class ScheduleController {
     public java.sql.Date covertDateToDateSql(Date d) {
         return new java.sql.Date(d.getTime());
     }
-    private String convertDatetoString (Date d){
+
+    private String convertDatetoString(Date d) {
         SimpleDateFormat sp = new SimpleDateFormat("dd/MM/yyyy");
         String date = null;
         return date = sp.format(d);
     }
-    public void setDataToTable( List<ScheduleModel> listItem) {
-        DefaultTableModel model = classTableModel.setTableSchedule(listItem, COLUMNS);
-        JTable table = new JTable(model);
 
-        rowSorter = new TableRowSorter<>(table.getModel());
-        table.setRowSorter(rowSorter); //sort
-
-        // design
-        table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
-        table.getTableHeader().setPreferredSize(new Dimension(100, 29));
-        table.setRowHeight(39);
-        table.getColumnModel().getColumn(0).setPreferredWidth(100);
-        table.getColumnModel().getColumn(1).setPreferredWidth(100);
-        table.validate();
-        table.repaint();
-
-        JScrollPane scroll = new JScrollPane();
-        scroll.getViewport().add(table);
-        scroll.setPreferredSize(new Dimension(1350, 400));
-        sche.panelFrmtable.removeAll();
-        sche.panelFrmtable.setLayout(new CardLayout());
-        sche.panelFrmtable.add(scroll);
-        sche.panelFrmtable.validate();
-        sche.panelFrmtable.repaint();
-        remove(table);
-    }
     private void remove(JTable table) {
         ScheduleModel scheduleModel1 = new ScheduleModel();
         table.addMouseListener(new MouseAdapter() {
@@ -216,7 +200,7 @@ public class ScheduleController {
 
                     selectedRowIndex = table.convertRowIndexToModel(selectedRowIndex);
 
-                    scheduleModel1.setMaSC(model.getValueAt(selectedRowIndex, 1).toString());
+                    scheduleModel1.setMaSC(model.getValueAt(selectedRowIndex, 0).toString());
 
                 }
             }
@@ -228,17 +212,16 @@ public class ScheduleController {
         sche.btnRemove.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if(showDialog()) {
+                if (showDialog()) {
                     if (scheduleModel1.getMaSC() == null)
                         JOptionPane.showMessageDialog(null, "Kích chuột vào 1 dòng của table để xóa !!", "Thông báo", JOptionPane.ERROR_MESSAGE);
-                    else{
+                    else {
                         scheduleService.delete(scheduleModel1);
-                        List<ScheduleModel> listItem1 = new ArrayList<>();
-                        listItem1 =getAll();
-                        setDataToTable(listItem1);
+                        loadTable();
                     }
                 }
             }
+
             @Override
             public void mouseEntered(MouseEvent e) {
                 sche.btnRemove.setBackground(new Color(172, 92, 92));
@@ -252,19 +235,29 @@ public class ScheduleController {
             }
         });
     }
+
     private boolean showDialog() {
         int dialogResult = JOptionPane.showConfirmDialog(null,
                 "Bạn có muốn xóa không ?", "Thông báo", JOptionPane.YES_NO_OPTION);
         return dialogResult == JOptionPane.YES_OPTION;
     }
 
-    private List<ScheduleModel> getAll(){
+    private List<ScheduleModel> getAll() {
         List<ScheduleModel> listItem = new ArrayList<>();
         ScheduleModel s = new ScheduleModel();
         s.setMaPhim(((MovieModel) sche.jbxName.getSelectedItem()).getMaPhim());
         s.setMaCa(((ShiftModel) sche.jbxShift.getSelectedItem()).getMaCa());
         a = sche.jbxRoom.getSelectedIndex();
-        s.setMaPhong((String)sche.jbxRoom.getItemAt(a));
-        return listItem = scheduleService.selectAllToTal(covertDateToDateSql(sche.jdcBegin.getDate()),covertDateToDateSql(sche.jdcEnd.getDate()),s);
+        s.setMaPhong((String) sche.jbxRoom.getItemAt(a));
+        return listItem = scheduleService.selectAllToTal(covertDateToDateSql(sche.jdcBegin.getDate()), covertDateToDateSql(sche.jdcEnd.getDate()), s);
     }
+
+    private void loadTable() {
+        List<ScheduleModel> listItem = getAll();
+        table = setTable.setDataToTable(sche.panelFrmtable, COLUMNS, listItem, sche.jtfSearch, methodNames);
+        for (MouseListener listener : mouseListeners) {
+            table.addMouseListener(listener);
+        }
+    }
+
 }

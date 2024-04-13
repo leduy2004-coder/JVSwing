@@ -39,28 +39,6 @@ public class MoveManageController {
         root.repaint();
         exit();
     }
-    public void setViewEmpl(JPanel jPanelItem, JLabel jLabelItem){
-        kindSelect = "Nhân viên";
-        jPanelItem.setBackground(new Color(96, 100, 191));
-        jLabelItem.setBackground(new Color(96, 100, 191));
-        root.removeAll();
-        root.setLayout(new BorderLayout());
-        root.add(new EmplManagePanel(frame));
-        root.validate();
-        root.repaint();
-        exit();
-    }
-    public void setViewCustomer(JPanel jPanelItem, JLabel jLabelItem){
-        kindSelect = "Khách hàng";
-        jPanelItem.setBackground(new Color(96, 100, 191));
-        jLabelItem.setBackground(new Color(96, 100, 191));
-        root.removeAll();
-        root.setLayout(new BorderLayout());
-        root.add(new CustomerManagePanel(frame));
-        root.validate();
-        root.repaint();
-        exit();
-    }
 
     public void setEvent(List<ListBean> listItem) {
         this.listItem = listItem;
@@ -87,10 +65,10 @@ public class MoveManageController {
                     node = new HomeManagePanel();
                     break;
                 case "Nhân viên":
-                    node = new EmplManagePanel(frame);
+                    node = new EmplManagePanel();
                     break;
                 case "Khách hàng":
-                    node = new CustomerManagePanel(frame);
+                    node = new CustomerManagePanel();
                     break;
                 case "Thống kê":
                     node = new StatisticPanel();

@@ -4,6 +4,7 @@ import bean.TableStatisticBean;
 import model.*;
 
 import javax.swing.table.DefaultTableModel;
+import java.lang.reflect.Method;
 import java.util.List;
 
 public class ClassTableModel {
@@ -42,6 +43,7 @@ public class ClassTableModel {
         return dtm;
 
     }
+
     public DefaultTableModel setTableCustomer(List<CustomerModel> listItem, String[] listColumn) {
         int columns = listColumn.length;
         DefaultTableModel dtm = new DefaultTableModel() {
@@ -73,6 +75,7 @@ public class ClassTableModel {
         }
         return dtm;
     }
+
     public DefaultTableModel setTableMovie(List<MovieModel> listItem, String[] listColumn) {
         int columns = listColumn.length;
         DefaultTableModel dtm = new DefaultTableModel() {
@@ -126,6 +129,7 @@ public class ClassTableModel {
         }
         return dtm;
     }
+
     public DefaultTableModel setTableSchedule(List<ScheduleModel> listItem, String[] listColumn) {
         int columns = listColumn.length;
         DefaultTableModel dtm = new DefaultTableModel() {
@@ -140,13 +144,14 @@ public class ClassTableModel {
         for (int i = 0; i < listItem.size(); i++) {
             scheduleModel = listItem.get(i);
             obj = new Object[columns];
-            obj[0] = i+1;
+            obj[0] = i + 1;
             obj[1] = scheduleModel.getMaSC();
             obj[2] = scheduleModel.getNgayChieu();
             dtm.addRow(obj);
         }
         return dtm;
     }
+
     public DefaultTableModel setTableStatistic(List<TableStatisticBean> listItem, String[] listColumn) {
         int columns = listColumn.length;
         DefaultTableModel dtm = new DefaultTableModel() {
@@ -161,7 +166,7 @@ public class ClassTableModel {
         for (int i = 0; i < listItem.size(); i++) {
             table = listItem.get(i);
             obj = new Object[columns];
-            obj[0] = i+1;
+            obj[0] = i + 1;
             obj[1] = table.getMovieName();
             obj[2] = table.getTotalDate();
             obj[3] = table.getTotalTicket();
@@ -170,6 +175,7 @@ public class ClassTableModel {
         }
         return dtm;
     }
+
     public DefaultTableModel setTableTicket(List<TicketModel> listItem, String[] listColumn) {
         int columns = listColumn.length;
         DefaultTableModel dtm = new DefaultTableModel() {
@@ -184,7 +190,7 @@ public class ClassTableModel {
         for (int i = 0; i < listItem.size(); i++) {
             table = listItem.get(i);
             obj = new Object[columns];
-            obj[0] = i+1;
+            obj[0] = i + 1;
             obj[1] = table.getMaVe();
             obj[2] = table.getMovieModel().getTenPhim();
             obj[3] = table.getSoLuongToiDa();
@@ -195,5 +201,30 @@ public class ClassTableModel {
             dtm.addRow(obj);
         }
         return dtm;
+    }
+
+
+    public DefaultTableModel createTableModel(List<?> dataList, String[] columnNames, String[] methodNames) {
+        DefaultTableModel model = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int rowIndex, int colIndex) {
+                return false;
+            }
+        };
+        model.setColumnIdentifiers(columnNames);
+        for (Object data : dataList) {
+            Object[] rowData = new Object[methodNames.length];
+            for (int i = 0; i < methodNames.length; i++) {
+                try {
+                    Method method = data.getClass().getMethod(methodNames[i]);
+                    Object value = method.invoke(data);
+                    rowData[i] = value;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            model.addRow(rowData);
+        }
+        return model;
     }
 }

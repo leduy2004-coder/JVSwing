@@ -19,6 +19,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.JSeparator;
 import java.awt.Font;
+import java.awt.event.MouseListener;
 import java.util.Objects;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
@@ -45,7 +46,7 @@ public class CustomerManageJFrame extends JFrame {
     public JTextField jtfPass;
     public JLabel jlbId;
     
-	public CustomerManageJFrame(CustomerModel customerModel, JFrame frame) {
+	public CustomerManageJFrame(CustomerModel customerModel,JPanel jpnView, String[] COLUMNS, JTextField jtfSearch, String[] methodNames, MouseListener[] mouseListeners) {
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(250, 150, 996, 663);
@@ -224,8 +225,7 @@ public class CustomerManageJFrame extends JFrame {
         label_3_1.setBounds(891, 224, 55, 24);
         jPanel.add(label_3_1);
 
-//        CustomerFrameController controller = new CustomerFrameController(frame,this,btnSave,btnExit,jtf_name,jtf_phone,jdc_date,jtf_email,jcb_status,jtf_user,jtf_pass,jlb_mess);
-        CustomerFrameController controller = new CustomerFrameController(frame,this);
+        CustomerFrameController controller = new CustomerFrameController(this,jpnView,COLUMNS,jtfSearch,methodNames,mouseListeners);
         if(customerModel == null) controller.CreateOrUpdate();
         else controller.setView(customerModel);
     }
