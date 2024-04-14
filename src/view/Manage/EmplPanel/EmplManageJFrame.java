@@ -53,7 +53,7 @@ public class EmplManageJFrame extends JFrame {
 
     private EmplFrameController emplFrameController;
 
-	public EmplManageJFrame(EmployeeModel employeeModel, JPanel jpnView, String[] COLUMNS, JTextField jtfSearch, String[] methodNames, MouseListener[] mouseListeners) {
+	public EmplManageJFrame(EmployeeModel employeeModel, JPanel jpnView, JTextField jtfSearch, JButton btnRemove) {
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(250, 150, 996, 663);
@@ -267,7 +267,7 @@ public class EmplManageJFrame extends JFrame {
         label_3.setFont(new Font("Dialog", Font.BOLD, 18));
         label_3.setBounds(891, 153, 55, 24);
         jPanel.add(label_3);
-        emplFrameController = new EmplFrameController(this,jpnView,COLUMNS,jtfSearch,methodNames,mouseListeners);
+        emplFrameController = new EmplFrameController(this,jpnView,jtfSearch,btnRemove);
 	    if(employeeModel == null) emplFrameController.CreateOrUpdate();
         else emplFrameController.setView(employeeModel);
     }
