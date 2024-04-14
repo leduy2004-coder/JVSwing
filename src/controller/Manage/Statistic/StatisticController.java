@@ -4,13 +4,13 @@ import Service.impl.StatisticService;
 import bean.ChartStatisticBean;
 import bean.DataStatisticBean;
 import bean.TableStatisticBean;
-import com.toedter.calendar.JDateChooser;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 import utility.ClassTableModel;
+import view.Manage.StatisticPanel.StatisticPanel;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -23,16 +23,7 @@ import java.util.Date;
 import java.util.List;
 
 public class StatisticController {
-    private JLabel jlbTotalMovie;
-    private JLabel jlbTotalCus;
-    private JLabel jlbTotalEmpl;
-    private JPanel jpnChart;
-    private JPanel jpnTable;
-    private JDateChooser jdcBegin;
-    private JDateChooser jdcEnd;
-    private JButton btnSeenTable;
-    private JButton btnSeenChart;
-    private JComboBox jcbYear;
+    private StatisticPanel statistic;
     StatisticService statisticService = new StatisticService();
     ChartStatisticBean chart;
     DataStatisticBean data;
@@ -41,18 +32,8 @@ public class StatisticController {
     private final String[] COLUMNS = {"STT","Tên phim","Số buổi chiếu","Số vé bán ra","Tổng doanh thu"};
     private TableRowSorter<TableModel> rowSorter = null;
 
-    public StatisticController(JLabel jlbTotalMovie, JLabel jlbTotalCus, JLabel jlbTotalEmpl, JPanel jpnChart,
-                               JPanel jpnTable,JDateChooser jdcBegin,JDateChooser jdcEnd,JButton btnSeenTable,JComboBox jcbYear,JButton btnSeenChart) {
-        this.jlbTotalMovie = jlbTotalMovie;
-        this.jlbTotalCus = jlbTotalCus;
-        this.jlbTotalEmpl = jlbTotalEmpl;
-        this.jpnChart = jpnChart;
-        this.jpnTable = jpnTable;
-        this.jdcBegin = jdcBegin;
-        this.jdcEnd = jdcEnd;
-        this.btnSeenTable = btnSeenTable;
-        this.jcbYear = jcbYear;
-        this.btnSeenChart = btnSeenChart;
+    public StatisticController(StatisticPanel statisticPanel) {
+        this.statistic =statisticPanel;
         chart = new ChartStatisticBean();
         data = new DataStatisticBean();
         table = new TableStatisticBean();
@@ -61,25 +42,25 @@ public class StatisticController {
 
     public void setData(){
         data = statisticService.getData();
-        jlbTotalMovie.setText(String.valueOf(data.getTotalMovie()));
-        jlbTotalCus.setText(String.valueOf(data.getTotalCustomer()));
-        jlbTotalEmpl.setText(String.valueOf(data.getTotalEmployee()));
+        statistic.jlbTotalMovie.setText(String.valueOf(data.getTotalMovie()));
+        statistic.jlbTotalCus.setText(String.valueOf(data.getTotalCustomer()));
+        statistic.jlbTotalEmpl.setText(String.valueOf(data.getTotalEmployee()));
     }
     public void setChart(){
         List<ChartStatisticBean> list;
         list = statisticService.getAllYear();
         for (ChartStatisticBean chart:list) {
-            jcbYear.addItem(chart.getYear());
+            statistic.jcbYear.addItem(chart.getYear());
         }
-        btnSeenChart.addMouseListener(new MouseAdapter() {
+        statistic.btnSeenChart.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                jpnChart.removeAll();
-                jpnChart.validate();
-                jpnChart.repaint();
-                if(jcbYear != null && !(String.valueOf(jcbYear.getItemAt(jcbYear.getSelectedIndex()))).equals("")){
+                statistic.jpnChart.removeAll();
+                statistic.jpnChart.validate();
+                statistic.jpnChart.repaint();
+                if(statistic.jcbYear != null && !(String.valueOf(statistic.jcbYear.getItemAt(statistic.jcbYear.getSelectedIndex()))).equals("")){
                     List<ChartStatisticBean> charts;
-                    charts = statisticService.getChart((int)jcbYear.getItemAt(jcbYear.getSelectedIndex()));
+                    charts = statisticService.getChart((int)statistic.jcbYear.getItemAt(statistic.jcbYear.getSelectedIndex()));
                     DefaultCategoryDataset dataset = new DefaultCategoryDataset();
                     if (charts.size()>0) {
                         for (ChartStatisticBean item : charts) {
@@ -92,12 +73,12 @@ public class StatisticController {
                             dataset, PlotOrientation.VERTICAL, false, true, false);
 
                     ChartPanel chartPanel = new ChartPanel(barChart);
-                    chartPanel.setPreferredSize(new Dimension(jpnChart.getWidth(), 321));
-                    jpnChart.removeAll();
-                    jpnChart.setLayout(new CardLayout());
-                    jpnChart.add(chartPanel);
-                    jpnChart.validate();
-                    jpnChart.repaint();
+                    chartPanel.setPreferredSize(new Dimension(statistic.jpnChart.getWidth(), 321));
+                    statistic.jpnChart.removeAll();
+                    statistic.jpnChart.setLayout(new CardLayout());
+                    statistic.jpnChart.add(chartPanel);
+                    statistic.jpnChart.validate();
+                    statistic.jpnChart.repaint();
                 }else {
                     JOptionPane.showMessageDialog(null,"Phải chọn năm !!","Thông báo",JOptionPane.ERROR_MESSAGE);
                 }
@@ -115,15 +96,15 @@ public class StatisticController {
         });
     }
     public void setTable() {
-        btnSeenTable.addMouseListener(new MouseAdapter() {
+        statistic.btnSeenTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                jpnTable.removeAll();
-                jpnTable.validate();
-                jpnTable.repaint();
-                if(jdcBegin.getDate()!=null&&jdcEnd.getDate()!=null){
-                    if((jdcBegin.getDate()).compareTo(jdcEnd.getDate())<=0) {
-                        List<TableStatisticBean> listItem = statisticService.getTable(covertDateToDateSql(jdcBegin.getDate()),covertDateToDateSql(jdcEnd.getDate()));
+                statistic.jpnTable.removeAll();
+                statistic.jpnTable.validate();
+                statistic.jpnTable.repaint();
+                if(statistic.jdcBegin.getDate()!=null&&statistic.jdcEnd.getDate()!=null){
+                    if((statistic.jdcBegin.getDate()).compareTo(statistic.jdcEnd.getDate())<=0) {
+                        List<TableStatisticBean> listItem = statisticService.getTable(covertDateToDateSql(statistic.jdcBegin.getDate()),covertDateToDateSql(statistic.jdcEnd.getDate()));
                         if(listItem.size()>0){
                             DefaultTableModel model = classTableModel.setTableStatistic(listItem, COLUMNS);
                             JTable table = new JTable(model);
@@ -144,11 +125,11 @@ public class StatisticController {
                             JScrollPane scroll = new JScrollPane();
                             scroll.getViewport().add(table);
                             scroll.setPreferredSize(new Dimension(1350, 400));
-                            jpnTable.removeAll();
-                            jpnTable.setLayout(new CardLayout());
-                            jpnTable.add(scroll);
-                            jpnTable.validate();
-                            jpnTable.repaint();
+                            statistic.jpnTable.removeAll();
+                            statistic.jpnTable.setLayout(new CardLayout());
+                            statistic.jpnTable.add(scroll);
+                            statistic.jpnTable.validate();
+                            statistic.jpnTable.repaint();
                         }
                         else {
                             JOptionPane.showMessageDialog(null,"Không tìm thấy dữ liệu !!","Thông báo",JOptionPane.ERROR_MESSAGE);

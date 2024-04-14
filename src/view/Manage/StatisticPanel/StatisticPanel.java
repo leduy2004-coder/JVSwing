@@ -22,10 +22,16 @@ import javax.swing.JComboBox;
 public class StatisticPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-
-	/**
-	 * Create the panel.
-	 */
+	public JLabel jlbTotalMovie;
+	public JLabel jlbTotalCus;
+	public JLabel jlbTotalEmpl;
+	public JPanel jpnChart;
+	public JPanel jpnTable;
+	public JDateChooser jdcBegin;
+	public JDateChooser jdcEnd;
+	public JButton btnSeenTable;
+	public JButton btnSeenChart;
+	public JComboBox jcbYear;
 	public StatisticPanel() {
 		setLayout(new BorderLayout(0, 0));
 		setBorder(new EmptyBorder(10, 10, 10, 10));
@@ -51,10 +57,10 @@ public class StatisticPanel extends JPanel {
 		panel_3.add(panel_6, BorderLayout.CENTER);
 		panel_6.setLayout(new BoxLayout(panel_6, BoxLayout.Y_AXIS));
 		
-		JLabel lblNewLabel_1 = new JLabel("30");
-		lblNewLabel_1.setForeground(new Color(47, 79, 79));
-		lblNewLabel_1.setFont(new Font("Arial", Font.BOLD, 30));
-		panel_6.add(lblNewLabel_1);
+		jlbTotalMovie = new JLabel("30");
+		jlbTotalMovie.setForeground(new Color(47, 79, 79));
+		jlbTotalMovie.setFont(new Font("Arial", Font.BOLD, 30));
+		panel_6.add(jlbTotalMovie);
 		
 		JLabel lblNewLabel_2 = new JLabel("Số phim đã chiếu");
 		lblNewLabel_2.setForeground(new Color(47, 79, 79));
@@ -74,10 +80,10 @@ public class StatisticPanel extends JPanel {
 		panel_3_1.add(panel_1, BorderLayout.CENTER);
 		panel_1.setLayout(new BoxLayout(panel_1, BoxLayout.Y_AXIS));
 		
-		JLabel lblNewLabel_5 = new JLabel("50");
-		lblNewLabel_5.setForeground(new Color(47, 79, 79));
-		lblNewLabel_5.setFont(new Font("Arial", Font.BOLD, 30));
-		panel_1.add(lblNewLabel_5);
+		jlbTotalCus = new JLabel("50");
+		jlbTotalCus.setForeground(new Color(47, 79, 79));
+		jlbTotalCus.setFont(new Font("Arial", Font.BOLD, 30));
+		panel_1.add(jlbTotalCus);
 		
 		JLabel lblNewLabel_6 = new JLabel("Khách từ trước đến nay");
 		lblNewLabel_6.setFont(new Font("Arial", Font.PLAIN, 17));
@@ -107,10 +113,10 @@ public class StatisticPanel extends JPanel {
 		panel_3_2.add(panel_2, BorderLayout.CENTER);
 		panel_2.setLayout(new BoxLayout(panel_2, BoxLayout.Y_AXIS));
 		
-		JLabel lblNewLabel_7 = new JLabel("70");
-		lblNewLabel_7.setForeground(new Color(47, 79, 79));
-		lblNewLabel_7.setFont(new Font("Arial", Font.BOLD, 30));
-		panel_2.add(lblNewLabel_7);
+		 jlbTotalEmpl = new JLabel("70");
+		jlbTotalEmpl.setForeground(new Color(47, 79, 79));
+		jlbTotalEmpl.setFont(new Font("Arial", Font.BOLD, 30));
+		panel_2.add(jlbTotalEmpl);
 		
 		JLabel lblNewLabel_8 = new JLabel("Nhân viên đang làm việc");
 		lblNewLabel_8.setFont(new Font("Arial", Font.PLAIN, 17));
@@ -136,11 +142,11 @@ public class StatisticPanel extends JPanel {
 		Component horizontalStrut = Box.createHorizontalStrut(20);
 		panel_4.add(horizontalStrut);
 		
-		JDateChooser beginDate = new JDateChooser();
-		beginDate.setDateFormatString("dd-MM-yyyy");
-		beginDate.setPreferredSize(new Dimension(180, 30));
-		beginDate.setFont(new Font("Arial", Font.PLAIN, 15));
-		panel_4.add(beginDate);
+		jdcBegin = new JDateChooser();
+		jdcBegin.setDateFormatString("dd-MM-yyyy");
+		jdcBegin.setPreferredSize(new Dimension(180, 30));
+		jdcBegin.setFont(new Font("Arial", Font.PLAIN, 15));
+		panel_4.add(jdcBegin);
 		
 		Component horizontalStrut_2 = Box.createHorizontalStrut(20);
 		horizontalStrut_2.setPreferredSize(new Dimension(30, 0));
@@ -153,22 +159,22 @@ public class StatisticPanel extends JPanel {
 		Component horizontalStrut_1 = Box.createHorizontalStrut(20);
 		panel_4.add(horizontalStrut_1);
 		
-		JDateChooser endDate = new JDateChooser();
-		endDate.setDateFormatString("dd-MM-yyyy");
-		endDate.setFont(new Font("Arial", Font.PLAIN, 15));
-		endDate.setPreferredSize(new Dimension(180, 30));
-		panel_4.add(endDate);
-		
+		jdcEnd = new JDateChooser();
+		jdcEnd.setDateFormatString("dd-MM-yyyy");
+		jdcEnd.setFont(new Font("Arial", Font.PLAIN, 15));
+		jdcEnd.setPreferredSize(new Dimension(180, 30));
+		panel_4.add(jdcEnd);
+
 		Component horizontalStrut_3 = Box.createHorizontalStrut(20);
 		panel_4.add(horizontalStrut_3);
 		
-		JButton btnSeen = new JButton("Xem");
-		btnSeen.setPreferredSize(new Dimension(90, 30));
-		btnSeen.setFont(new Font("Arial", Font.PLAIN, 19));
-		panel_4.add(btnSeen);
+		btnSeenTable = new JButton("Xem");
+		btnSeenTable.setPreferredSize(new Dimension(90, 30));
+		btnSeenTable.setFont(new Font("Arial", Font.PLAIN, 19));
+		panel_4.add(btnSeenTable);
 		
-		JPanel tablePanel = new JPanel();
-		bottomPanel.add(tablePanel, BorderLayout.CENTER);
+		jpnTable = new JPanel();
+		bottomPanel.add(jpnTable, BorderLayout.CENTER);
 
 		topPanel.setLayout(new BorderLayout(0, 0));
 
@@ -183,24 +189,24 @@ public class StatisticPanel extends JPanel {
 		horizontalGlue.setPreferredSize(new Dimension(20, 0));
 		panel_5.add(horizontalGlue);
 		
-		JComboBox comboBox = new JComboBox();
-		comboBox.setFont(new Font("Arial", Font.PLAIN, 15));
-		comboBox.setPreferredSize(new Dimension(180, 30));
-		comboBox.addItem("");
-		panel_5.add(comboBox);
+		jcbYear = new JComboBox();
+		jcbYear.setFont(new Font("Arial", Font.PLAIN, 15));
+		jcbYear.setPreferredSize(new Dimension(180, 30));
+		jcbYear.addItem("");
+		panel_5.add(jcbYear);
 
-		JPanel chartPanel = new JPanel();
-		topPanel.add(chartPanel, BorderLayout.CENTER);
+		jpnChart = new JPanel();
+		topPanel.add(jpnChart, BorderLayout.CENTER);
 		Component horizontalStrut_4 = Box.createHorizontalStrut(20);
 		horizontalStrut_4.setPreferredSize(new Dimension(30, 0));
 		panel_5.add(horizontalStrut_4);
 		
-		JButton btnXem = new JButton("Xem");
-		btnXem.setFont(new Font("Arial", Font.PLAIN, 19));
-		btnXem.setPreferredSize(new Dimension(90, 30));
-		panel_5.add(btnXem);
+		btnSeenChart = new JButton("Xem");
+		btnSeenChart.setFont(new Font("Arial", Font.PLAIN, 19));
+		btnSeenChart.setPreferredSize(new Dimension(90, 30));
+		panel_5.add(btnSeenChart);
 
-		StatisticController statisticController = new StatisticController(lblNewLabel_1,lblNewLabel_5,lblNewLabel_7,chartPanel,tablePanel,beginDate,endDate,btnSeen,comboBox,btnXem);
+		StatisticController statisticController = new StatisticController(this);
 		
 		statisticController.setData();
 		statisticController.setChart();

@@ -17,28 +17,23 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-public class CustomerFrameController {
-    private JFrame frame;
+public class CustomerFrameController extends EventCustomer{
     private CustomerManageJFrame customer;
     private CustomerService customerService;
     private CustomerModel customerModel;
     private String msg;
     private JTable table;
     private JPanel jpnView;
-    private String[] COLUMNS;
     private JTextField jtfSearch;
-    private String[] methodNames;
     private MouseListener[] mouseListeners;
-    SetTable<MovieModel> setTable = SetTable.getInstance();
+    private JButton btnRemove;
 
 
-    public CustomerFrameController(CustomerManageJFrame customerManageJFrame,JPanel jpnView, String[] COLUMNS, JTextField jtfSearch, String[] methodNames,MouseListener[] mouseListeners){
+    public CustomerFrameController(CustomerManageJFrame customerManageJFrame,JPanel jpnView, JTextField jtfSearch,JButton btnRemove){
         this.customer = customerManageJFrame;
         this.jpnView = jpnView;
-        this.COLUMNS = COLUMNS;
         this.jtfSearch = jtfSearch;
-        this.methodNames = methodNames;
-        this.mouseListeners = mouseListeners;
+        this.btnRemove = btnRemove;
         customerService = new CustomerService();
     }
     public void setView(CustomerModel customerModel) {
@@ -80,14 +75,14 @@ public class CustomerFrameController {
                             if(showDialog(msg)){
                                 customerService.save(customerModel);
                                 customer.dispose();
-                                loadTable();
+                                loadTable(jpnView,jtfSearch,btnRemove);
                             }
                         }else {
                             msg = "Bạn muốn cập nhật dữ liệu không ?";
                             if(showDialog(msg)){
                                 customerService.update(customerModel);
                                 customer.dispose();
-                                loadTable();
+                                loadTable(jpnView,jtfSearch,btnRemove);
                             }
                         }
                     }
@@ -159,16 +154,5 @@ public class CustomerFrameController {
         SimpleDateFormat sp = new SimpleDateFormat("dd/MM/yyyy");
         String date = null;
         return date = sp.format(d);
-    }
-
-    private void loadTable(){
-        jpnView.removeAll();
-        jpnView.validate();
-        jpnView.repaint();
-        List<CustomerModel> listItem = customerService.selectAll();
-        table = setTable.setDataToTable(jpnView,COLUMNS,listItem,jtfSearch,methodNames);
-        for (MouseListener listener : mouseListeners) {
-            table.addMouseListener(listener);
-        }
     }
 }

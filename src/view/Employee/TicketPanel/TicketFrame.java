@@ -24,7 +24,7 @@ public class TicketFrame extends JFrame {
     public JLabel lbIdEmploy;
     public JTextField search;
 
-	public TicketFrame(JPanel jpnView, String[] COLUMNS, JTextField jtfSearch, String[] methodNames, MouseListener[] mouseListeners) {
+	public TicketFrame(JPanel jpnView, JTextField jtfSearch, JButton btnRemove) {
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(250, 100, 1026, 778);
@@ -187,7 +187,7 @@ public class TicketFrame extends JFrame {
         
         Border border1 = BorderFactory.createLineBorder(Color.BLACK, 1);
 
-        TicketFrController ticketFrController = new TicketFrController( this,jpnView,COLUMNS,jtfSearch,methodNames,mouseListeners);
+        TicketFrController ticketFrController = new TicketFrController( this,jpnView,jtfSearch,btnRemove);
         ticketFrController.CreateOrUpdate();
     }
 	public void setPicture(JButton button, String fileName, int width, int height) {

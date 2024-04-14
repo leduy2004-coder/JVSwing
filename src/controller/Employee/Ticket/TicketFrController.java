@@ -16,7 +16,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.List;
 
-public class TicketFrController {
+public class TicketFrController extends EventTicket{
     private TicketFrame ticket;
     private TicketService ticketService;
     private MovieModel movieModel;
@@ -31,18 +31,16 @@ public class TicketFrController {
     private JTable table = new JTable();
     private String[] columns;
     private JTextField jtfSearch;
-    private String[] methodNames;
-    private MouseListener[] mouseListeners;
+    private JButton btnRemove;
     TypeMovieService typeMovieService = new TypeMovieService();
     int t=0;
 
-    public TicketFrController(TicketFrame ticketFrame,JPanel jpnView, String[] COLUMNS, JTextField jtfSearch, String[] methodNames, MouseListener[] mouseListeners) {
+    public TicketFrController(TicketFrame ticketFrame,JPanel jpnView, JTextField jtfSearch, JButton btnRemove) {
         this.ticket = ticketFrame;
         this.jpnView = jpnView;
         this.columns = COLUMNS;
         this.jtfSearch = jtfSearch;
-        this.methodNames = methodNames;
-        this.mouseListeners = mouseListeners;
+        this.btnRemove = btnRemove;
         ticketService = new TicketService();
     }
 
@@ -79,7 +77,7 @@ public class TicketFrController {
                             if(showDialog(msg)){
                                 ticketService.save(ticketModel);
                                 ticket.dispose();
-                                loadTable();
+                                loadTable(jpnView,jtfSearch,btnRemove);
                             }
                         }
                     }else {
@@ -145,17 +143,6 @@ public class TicketFrController {
     private boolean check(){
         return ticket.jtfAmount.getText() != null && !ticket.jtfAmount.getText().equalsIgnoreCase("") &&
                 ticket.jtfMoney.getText() != null && !ticket.jtfMoney.getText().equalsIgnoreCase("") ;
-    }
-    private void loadTable(){
-        jpnView.removeAll();
-        jpnView.validate();
-        jpnView.repaint();
-        SetTable<MovieModel> setTable = SetTable.getInstance();
-        List<MovieModel> listItem = movieService.selectAll();
-        table = setTable.setDataToTable(jpnView,COLUMNS,listItem,jtfSearch,methodNames);
-        for (MouseListener listener : mouseListeners) {
-            table.addMouseListener(listener);
-        }
     }
 
 }

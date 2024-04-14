@@ -42,7 +42,7 @@ public class MovieJFrame extends JFrame {
     public JLabel jlbId;
 
 
-	public MovieJFrame(MovieModel movieModel, JPanel jpnView, String[] COLUMNS, JTextField jtfSearch, String[] methodNames, MouseListener[] mouseListeners) {
+	public MovieJFrame(MovieModel movieModel, JPanel jpnView, JTextField jtfSearch, JButton btnRemove) {
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(250, 100, 1026, 778);
@@ -266,7 +266,7 @@ public class MovieJFrame extends JFrame {
         label_4_1_1.setBounds(463, 548, 55, 24);
         jPanel.add(label_4_1_1);
 
-        MovieFrameController movieFrameController = new MovieFrameController(this,jpnView,COLUMNS,jtfSearch,methodNames,mouseListeners);
+        MovieFrameController movieFrameController = new MovieFrameController(this,jpnView,jtfSearch,btnRemove);
 	    if(movieModel == null) movieFrameController.CreateOrUpdate();
         else movieFrameController.setView(movieModel);
     }

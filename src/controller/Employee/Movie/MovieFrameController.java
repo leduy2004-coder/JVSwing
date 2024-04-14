@@ -8,6 +8,7 @@ import utility.SetTable;
 import view.Employee.MoviePanel.MovieJFrame;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -17,29 +18,24 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-public class MovieFrameController {
+public class MovieFrameController extends EventMovie{
     private MovieJFrame movie;
     private MovieService movieService;
     private MovieModel movieModel;
     private String msg;
     private JPanel jpnView;
     private JTable table;
-    private String[] COLUMNS;
     private JTextField jtfSearch;
-    private String[] methodNames;
-    private MouseListener[] mouseListeners;
+    private JButton btnRemove;
     TypeMovieService typeMovieService = new TypeMovieService();
-    SetTable<MovieModel> setTable = SetTable.getInstance();
 
     int t=0;
 
-    public MovieFrameController( MovieJFrame movie,JPanel jpnView, String[] COLUMNS, JTextField jtfSearch, String[] methodNames,MouseListener[] mouseListeners) {
+    public MovieFrameController( MovieJFrame movie,JPanel jpnView, JTextField jtfSearch,JButton btnRemove) {
         this.movie = movie;
         this.jpnView = jpnView;
-        this.COLUMNS = COLUMNS;
         this.jtfSearch = jtfSearch;
-        this.methodNames = methodNames;
-        this.mouseListeners = mouseListeners;
+        this.btnRemove = btnRemove;
         movieService = new MovieService();
     }
 
@@ -101,19 +97,18 @@ public class MovieFrameController {
                             if(showDialog(msg)){
                                 movieService.save(movieModel);
                                 movie.dispose();
-                                loadTable();
+                                loadTable(jpnView,jtfSearch,btnRemove);
                             }
                         }else {
                             msg = "Bạn muốn cập nhật dữ liệu không ?";
                             if(showDialog(msg)){
                                 movieService.update(movieModel);
                                 movie.dispose();
-                                loadTable();
+                                loadTable(jpnView,jtfSearch,btnRemove);
                             }
                         }
                     }
                 }catch (Exception ex) {
-                        ex.printStackTrace();
                         JOptionPane.showMessageDialog(null,msg,"Thông báo",JOptionPane.ERROR_MESSAGE);
                 }
             }
@@ -173,17 +168,5 @@ public class MovieFrameController {
         String date = null;
         return date = sp.format(d);
     }
-
-    private void loadTable(){
-        jpnView.removeAll();
-        jpnView.validate();
-        jpnView.repaint();
-        List<MovieModel> listItem = movieService.selectAll();
-        table = setTable.setDataToTable(jpnView,COLUMNS,listItem,jtfSearch,methodNames);
-        for (MouseListener listener : mouseListeners) {
-            table.addMouseListener(listener);
-        }
-    }
-
 
 }

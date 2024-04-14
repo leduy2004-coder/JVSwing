@@ -46,7 +46,7 @@ public class CustomerManageJFrame extends JFrame {
     public JTextField jtfPass;
     public JLabel jlbId;
     
-	public CustomerManageJFrame(CustomerModel customerModel,JPanel jpnView, String[] COLUMNS, JTextField jtfSearch, String[] methodNames, MouseListener[] mouseListeners) {
+	public CustomerManageJFrame(CustomerModel customerModel,JPanel jpnView, JTextField jtfSearch, JButton btnRemove) {
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(250, 150, 996, 663);
@@ -225,7 +225,7 @@ public class CustomerManageJFrame extends JFrame {
         label_3_1.setBounds(891, 224, 55, 24);
         jPanel.add(label_3_1);
 
-        CustomerFrameController controller = new CustomerFrameController(this,jpnView,COLUMNS,jtfSearch,methodNames,mouseListeners);
+        CustomerFrameController controller = new CustomerFrameController(this,jpnView,jtfSearch,btnRemove);
         if(customerModel == null) controller.CreateOrUpdate();
         else controller.setView(customerModel);
     }
