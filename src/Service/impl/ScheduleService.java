@@ -19,6 +19,11 @@ public class ScheduleService implements IScheduleService {
     }
 
     @Override
+    public List<ScheduleModel> selectAllByDate(Date date) {
+        return ScheduleDAO.getInstance().selectAllByDate(date);
+    }
+
+    @Override
     public List<ScheduleModel> selectAllDate(Date from, Date to) {
         return ScheduleDAO.getInstance().selectAllDate(from,to);
     }

@@ -1,11 +1,8 @@
 package Dao.impl;
 
-import Dao.JDBCUtil;
 import Dao.SQLSEVERDataAccess;
 import model.ManageModel;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class ManageDAO {

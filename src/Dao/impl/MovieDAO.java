@@ -3,7 +3,6 @@ package Dao.impl;
 import Dao.DAOInterface;
 import Dao.SQLSEVERDataAccess;
 import Service.impl.TypeMovieService;
-import Dao.JDBCUtil;
 import model.MovieModel;
 import model.TypeMovieModel;
 

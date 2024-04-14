@@ -137,13 +137,11 @@ public class LoginController {
                         dialog.dispose();
                         SessionUtil.getInstance().putValueEmpl(employeeModel);
                         EmployeeView frame = new EmployeeView();
-                        frame.HomePage();
                         frame.setVisible(true);
                     } else if (manageModel != null && employeeModel == null && manageModel.isTinhTrang()) {
                         dialog.dispose();
                         SessionUtil.getInstance().putValueManage(manageModel);
                         ManagementView frame = new ManagementView();
-                        frame.HomePage();
                         frame.setVisible(true);
                     } else {
                         jlbMess.setText("Tài khoản của bạn đang bị tạm khóa!");

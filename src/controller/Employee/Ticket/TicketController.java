@@ -40,8 +40,7 @@ public class TicketController extends EventTicket{
     }
 
     public void displayView() {
-        List<TicketModel> listItem = ticketService.selectAll();
-        table = setTable.setDataToTable(jpnView,COLUMNS,listItem,jtfSearch,methodNames);
+        loadTable(jpnView,jtfSearch,btnRemove);
         btnAdd.addMouseListener(new MouseAdapter() {
 
             @Override
@@ -64,7 +63,7 @@ public class TicketController extends EventTicket{
             }
         });
 
-        loadTable(jpnView,jtfSearch,btnRemove);
+
     }
 
 }

@@ -18,6 +18,7 @@ import model.MovieModel;
 import model.ShiftModel;
 import view.Employee.HomeEmplPanel;
 import java.awt.Insets;
+import java.awt.Cursor;
 
 public class SchedulePanel extends JPanel {
 
@@ -104,6 +105,7 @@ public class SchedulePanel extends JPanel {
 		panel_14.add(horizontalStrut_8);
 		
 		btnRemove = new JButton("- Xóa");
+		btnRemove.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		panel_14.add(btnRemove);
 		btnRemove.setForeground(new Color(255, 255, 255));
 		btnRemove.setBackground(new Color(255, 0, 0));
@@ -156,6 +158,7 @@ public class SchedulePanel extends JPanel {
 		panel_2.add(horizontalStrut_1);
 		
 		btnFilter = new JButton("Lọc");
+		btnFilter.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnFilter.setPreferredSize(new Dimension(130, 30));
 		btnFilter.setForeground(Color.WHITE);
 		btnFilter.setFont(new Font("Arial", Font.BOLD, 17));
@@ -256,6 +259,7 @@ public class SchedulePanel extends JPanel {
 		panel_8.add(panel_16);
 
 		btnSearch = new JButton("Tìm kiếm");
+		btnSearch.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnSearch.setPreferredSize(new Dimension(200, 37));
 		btnSearch.setFont(new Font("Arial", Font.BOLD, 17));
 		panel_16.add(btnSearch);
@@ -269,6 +273,7 @@ public class SchedulePanel extends JPanel {
 	
 		
 		btnSave = new JButton("+ Thêm mới");
+		btnSave.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnSave.setForeground(new Color(255, 255, 255));
 		btnSave.setBackground(new Color(34, 139, 34));
 		btnSave.setPreferredSize(new Dimension(130, 30));

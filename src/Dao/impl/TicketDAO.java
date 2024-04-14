@@ -21,7 +21,7 @@ public class TicketDAO implements DAOInterface<TicketModel> {
 
     @Override
     public int insert(TicketModel t) {
-        String sql = "INSERT INTO Ve (maPhim, maNV, tinhTrang, soLuongToiDa, soLuongDaDat, tien) VALUES (?,?,?,?,?,?)";
+        String sql = "INSERT INTO Ve (maPhim, maNV, tinhTrang, soLuongToiDa, soLuongDaBan, tien) VALUES (?,?,?,?,?,?)";
         int k = con.ExecuteUpdateSQL(sql,t.getMovieModel().getMaPhim(), t.getMaNV(), t.isTinhTrang(), t.getSoLuongToiDa(),t.getSoLuongDaDat(), t.getTien());
         return k;
     }
@@ -53,8 +53,9 @@ public class TicketDAO implements DAOInterface<TicketModel> {
             while (rs.next()) {
                 ticketModel = new TicketModel();
                 ticketModel.setMaNV(rs.getString("maNV"));
+                ticketModel.setMaVe(rs.getString("maVe"));
                 ticketModel.setTien(rs.getFloat("tien"));
-                ticketModel.setSoLuongDaDat(rs.getInt("soLuongDaDat"));
+                ticketModel.setSoLuongDaDat(rs.getInt("soLuongDaBan"));
                 ticketModel.setSoLuongToiDa(rs.getInt("soLuongToiDa"));
                 ticketModel.setTinhTrang(rs.getBoolean("tinhTrang"));
 

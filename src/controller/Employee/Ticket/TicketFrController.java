@@ -29,7 +29,6 @@ public class TicketFrController extends EventTicket{
     private String msg;
     private JPanel jpnView;
     private JTable table = new JTable();
-    private String[] columns;
     private JTextField jtfSearch;
     private JButton btnRemove;
     TypeMovieService typeMovieService = new TypeMovieService();
@@ -38,7 +37,6 @@ public class TicketFrController extends EventTicket{
     public TicketFrController(TicketFrame ticketFrame,JPanel jpnView, JTextField jtfSearch, JButton btnRemove) {
         this.ticket = ticketFrame;
         this.jpnView = jpnView;
-        this.columns = COLUMNS;
         this.jtfSearch = jtfSearch;
         this.btnRemove = btnRemove;
         ticketService = new TicketService();
@@ -54,9 +52,6 @@ public class TicketFrController extends EventTicket{
         MovieModel movie = new MovieModel();
         movie = getData(table1,movie);
         MovieModel finalMovie = movie;
-        if(finalMovie.getMaPhim() != null){
-            ticket.lbMovie.setText(finalMovie.getTenPhim());
-        }
         ticket.btnSave.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -66,14 +61,15 @@ public class TicketFrController extends EventTicket{
                             msg = "Vui lòng nhập đầy đủ dữ liệu !!";
                             JOptionPane.showMessageDialog(null,msg,"Thông báo",JOptionPane.ERROR_MESSAGE);
                         }else{
+                            ticket.lbMovie.setText(finalMovie.getTenPhim());
                             TicketModel ticketModel = new TicketModel();
                             msg = "Số lượng phải là kiểu số !!";
                             ticketModel.setSoLuongToiDa(Integer.parseInt(ticket.jtfAmount.getText().trim()));
                             msg = "Giá cả phải là kiểu số!!";
                             ticketModel.setTien(Float.parseFloat(ticket.jtfMoney.getText().trim()));
-                            ticketModel.setMaNV(ticket.lbIdEmploy.getText());
+                            ticketModel.setMaNV(SessionUtil.getInstance().getValueEmpl().getMaNV());
                             ticketModel.setMovieModel(finalMovie);
-
+                            msg= "Bạn muốn thêm dữ liệu không ?";
                             if(showDialog(msg)){
                                 ticketService.save(ticketModel);
                                 ticket.dispose();
@@ -129,6 +125,7 @@ public class TicketFrController extends EventTicket{
 
                     movieModel.setMaPhim(model.getValueAt(selectedRowIndex, 0).toString());
                     movieModel.setTenPhim(model.getValueAt(selectedRowIndex,1).toString());
+                    ticket.lbMovie.setText(movieModel.getTenPhim());
                 }
             }
         });

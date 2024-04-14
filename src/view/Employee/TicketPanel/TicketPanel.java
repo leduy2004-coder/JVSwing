@@ -16,7 +16,7 @@ public class TicketPanel extends JPanel {
 	/**
 	 * Create the panel.
 	 */
-	public TicketPanel(JFrame frame) {
+	public TicketPanel() {
 		setLayout(new BorderLayout(0, 0));
 		setBorder(new EmptyBorder(0, 5, 5, 5));
 		JPanel panel = new JPanel();

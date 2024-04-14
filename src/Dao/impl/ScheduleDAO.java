@@ -45,6 +45,25 @@ public class ScheduleDAO implements DAOInterface<ScheduleModel> {
         return null;
     }
 
+    public List<ScheduleModel> selectAllByDate(Date date) {
+        List<ScheduleModel> result = new ArrayList<ScheduleModel>();
+        try {
+            String sql = "SELECT * FROM SuatChieu WHERE ngayChieu = ?";
+            ResultSet rs = con.getResultSet(sql,date);
+            ScheduleModel scheduleModel = null;
+            while (rs.next()) {
+                scheduleModel = new ScheduleModel();
+                scheduleModel.setMaPhong(rs.getString("maPhong"));
+                scheduleModel.setMaPhim(rs.getString("maPhim"));
+                scheduleModel.setMaCa(rs.getString("maCa"));
+                scheduleModel.setNgayChieu(rs.getDate("ngayChieu"));
+                result.add(scheduleModel);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return result;
+    }
     public List<ScheduleModel> selectAllDate(Date from, Date to) {
         List<ScheduleModel> result = new ArrayList<ScheduleModel>();
         try {
@@ -68,12 +87,6 @@ public class ScheduleDAO implements DAOInterface<ScheduleModel> {
         List<ScheduleModel> result = new ArrayList<ScheduleModel>();
         try {
             String sql = "SELECT * FROM SuatChieu WHERE ngayChieu > ? and ngayChieu < ? and maPhim = ? and maPhong= ? and maCa = ?";
-//            PreparedStatement pstmt = con.prepareStatement(sql);
-//            pstmt.setDate(1, from);
-//            pstmt.setDate(2, to);
-//            pstmt.setString(3,t.getMaPhim());
-//            pstmt.setString(4,t.getMaPhong());
-//            pstmt.setString(5,t.getMaCa());
             ResultSet rs = con.getResultSet(sql,from,to,t.getMaPhim(),t.getMaPhong(),t.getMaCa());
             ScheduleModel scheduleModel = null;
             while (rs.next()) {
