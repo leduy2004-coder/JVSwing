@@ -13,6 +13,8 @@ import javax.swing.*;
 
 import bean.ListBean;
 import utility.SessionUtil;
+import view.Employee.BookingPanel.BookingPanel;
+import view.Employee.TicketPanel.TicketPanel;
 import view.LoginView;
 import view.Employee.HomeEmplPanel;
 import view.Employee.MoviePanel.MoviePanel;
@@ -68,9 +70,11 @@ public class MoveEmplController {
                 case "Trang chủ":
                     node = new HomeEmplPanel();
                     break;
-//                case "Đặt vé":
-//                    break;
+                case "Đặt vé":
+                    node = new BookingPanel();
+                    break;
                 case "Vé":
+                    node = new TicketPanel();
                     break;
                 case "Phim":
                   node = new MoviePanel();

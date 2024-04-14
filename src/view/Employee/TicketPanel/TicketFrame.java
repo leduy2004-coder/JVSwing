@@ -1,12 +1,26 @@
 package view.Employee.TicketPanel;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Image;
+
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSeparator;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.border.Border;
+
 import controller.Employee.Ticket.TicketFrController;
 import view.Manage.EmplPanel.EmplManageJFrame;
-
-import javax.swing.*;
-import javax.swing.border.Border;
-import java.awt.*;
-import java.awt.event.MouseListener;
 
 public class TicketFrame extends JFrame {
 
@@ -120,9 +134,9 @@ public class TicketFrame extends JFrame {
         lblNewLabel_1_2_1_2.setBounds(559, 613, 110, 41);
         jPanel.add(lblNewLabel_1_2_1_2);
         
-        JLabel lblNewLabel_1_2_1_2_1 = new JLabel("Mã nhân viên:");
+        JLabel lblNewLabel_1_2_1_2_1 = new JLabel("Tên nhân viên:");
         lblNewLabel_1_2_1_2_1.setFont(new Font("Arial", Font.PLAIN, 20));
-        lblNewLabel_1_2_1_2_1.setBounds(156, 613, 126, 41);
+        lblNewLabel_1_2_1_2_1.setBounds(156, 613, 138, 41);
         jPanel.add(lblNewLabel_1_2_1_2_1);
         
         JLabel lblNewLabel_1_2_1_3 = new JLabel("Giá 1 vé");

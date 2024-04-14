@@ -11,7 +11,7 @@ public class SQLSEVERDataAccess {
             String DriverClass, DriverURL;
             String UserName = "sa";
             String PassWord = "ad123456";
-            String DataBaseName = "cnm";
+            String DataBaseName = "cnm_1";
             String ServerName="DESKTOP-2NFEM03";
 
             String IntegratedSecurity = "IntegratedSecurity=false";

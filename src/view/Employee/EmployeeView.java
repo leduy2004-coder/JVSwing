@@ -186,7 +186,7 @@ public class EmployeeView extends JFrame {
 		
 		controller = new MoveEmplController(contentEmplPanel,this,mntmNewMenuItem);
 		controller.setEvent(listItem);
-		
+		controller.setView(homeEmplPanel,homeEmplLabel);
 		
 	}
 	public void setPicture(JLabel label, String fileName) {
@@ -195,7 +195,4 @@ public class EmployeeView extends JFrame {
 		ImageIcon scaledIcon = new ImageIcon(scaledImage);
 		label.setIcon(scaledIcon);
     }
-	public void HomePage(){
-		controller.setView(homeEmplPanel,homeEmplLabel);
-	}
 }

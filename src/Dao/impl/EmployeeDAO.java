@@ -6,9 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import Dao.DAOInterface;
-import Dao.JDBCUtil;
 import Dao.SQLSEVERDataAccess;
-import model.CustomerModel;
 import model.EmployeeModel;
 
 public class EmployeeDAO implements DAOInterface<EmployeeModel> {

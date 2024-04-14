@@ -10,6 +10,7 @@ import java.util.List;
 
 public interface IScheduleService {
     public int save(ScheduleModel scheduleModel);
+    public List<ScheduleModel> selectAllByDate(Date date);
     public List<ScheduleModel> selectAllDate(Date from, Date to);
     public List<ScheduleModel> selectAllToTal(Date from, Date to,ScheduleModel s);
 

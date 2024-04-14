@@ -1,7 +1,6 @@
 
 package Dao.impl;
 import Dao.DAOInterface;
-import Dao.JDBCUtil;
 import Dao.SQLSEVERDataAccess;
 import model.CustomerModel;
 

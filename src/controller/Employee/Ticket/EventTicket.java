@@ -15,7 +15,7 @@ import java.util.List;
 
 public abstract class EventTicket {
     public final String[] COLUMNS = {"Mã vé", "Tên phim", "Số lượng đặt", "Số lượng bán", "Giá 1 vé", "maNV", "Trạng thái"};
-    String[] methodNames = {"getMaVe", "getTenPhim", "getSoLuongToiDa","getSoLuongDaBan","getTien","getMaNV","isTinhTrang"};
+    String[] methodNames = {"getMaVe", "getTenPhim", "getSoLuongToiDa","getSoLuongDaDat","getTien","getMaNV","isTinhTrang"};
     SetTable<MovieModel> setTable = SetTable.getInstance();
     private JTable table = new JTable();
      TicketService ticketService = new TicketService();
@@ -31,7 +31,7 @@ public abstract class EventTicket {
 
                     selectedRowIndex = table.convertRowIndexToModel(selectedRowIndex);
 
-                    ticketModel.setMaVe(model.getValueAt(selectedRowIndex, 1).toString());
+                    ticketModel.setMaVe(model.getValueAt(selectedRowIndex, 0).toString());
 
                 }
             }

@@ -175,6 +175,7 @@ public class ManagementView extends JFrame {
 		listItem.add(new ListBean("Khách hàng", customerManagePanel, customerManageLabel));
 		listItem.add(new ListBean("Thống kê", statisticPanel, statisticLabel));
 
+		controller.setView(homeManagePanel,homeManageLabel);
 		controller.setEvent(listItem);
 	}
 	public void setPicture(JLabel label, String fileName) {
@@ -183,9 +184,5 @@ public class ManagementView extends JFrame {
 		ImageIcon scaledIcon = new ImageIcon(scaledImage);
 		label.setIcon(scaledIcon);
     }
-
-	public void HomePage(){
-		controller.setView(homeManagePanel,homeManageLabel);
-	}
 
 }
