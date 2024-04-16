@@ -11,7 +11,7 @@ public class SQLSEVERDataAccess {
             String DriverClass, DriverURL;
             String UserName = "sa";
             String PassWord = "ad123456";
-            String DataBaseName = "cnm_1";
+            String DataBaseName = "Cinema";
             String ServerName="DESKTOP-2NFEM03";
 
             String IntegratedSecurity = "IntegratedSecurity=false";
@@ -53,6 +53,38 @@ public class SQLSEVERDataAccess {
         }
     }
 
+    public String insertAndGetId(String SQL, Object... param) {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        String generatedId = "";
+        try {
+            ps = cnn.prepareStatement(SQL, Statement.RETURN_GENERATED_KEYS);
+            int i = 1;
+            for (Object value : param) {
+                ps.setObject(i, value);
+                i++;
+            }
+            ps.executeUpdate();
+            rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                generatedId = rs.getString(1);
+            }
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+        return generatedId;
+    }
     //SQL (DELETE, UPDATE, INSERT)
     //INSERT INTO TBLOAINHANVIEN(IDLOAINHANVIEN,TENLOAINHANVIEN) VALUES(1,'NHAN VIEN BIEN CHE')
     public int ExecuteUpdateSQL(String SQL) {
