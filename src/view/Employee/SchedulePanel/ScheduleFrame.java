@@ -135,7 +135,6 @@ public class ScheduleFrame extends JFrame {
         JLabelRoom.setBounds(227, 294, 346, 28);
         jPanel.add(JLabelRoom);
         
-        Border border1 = BorderFactory.createLineBorder(Color.BLACK, 1);
 
         ScheduleFrController scheduleFrController = new ScheduleFrController(this,btnSave,btnExit,jdcDate,shift,movie,maPhong);
         scheduleFrController.setDataAndEvent();

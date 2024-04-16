@@ -21,6 +21,7 @@ import javax.swing.border.Border;
 
 import controller.Employee.Ticket.TicketFrController;
 import view.Manage.EmplPanel.EmplManageJFrame;
+import java.awt.Cursor;
 
 public class TicketFrame extends JFrame {
 
@@ -63,6 +64,7 @@ public class TicketFrame extends JFrame {
         jPanel.add(separator);
         
         btnSave = new JButton("Lưu dữ liệu");
+        btnSave.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         setPicture(btnSave, "/img/save.png", 25, 25);
         btnSave.setFont(new Font("Arial", Font.BOLD, 18));
         btnSave.setForeground(Color.WHITE);
@@ -80,6 +82,7 @@ public class TicketFrame extends JFrame {
         jPanel.add(separator_1);
         
         btnExit = new JButton("Thoát");
+        btnExit.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         setPicture(btnExit, "/img/exit.png", 25, 25);
         btnExit.setForeground(Color.WHITE);
         btnExit.setFont(new Font("Arial", Font.BOLD, 18));

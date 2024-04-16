@@ -24,6 +24,7 @@ import com.toedter.calendar.JDateChooser;
 import controller.Employee.Schedule.Frame.MovieFrController;
 import model.ShiftModel;
 import view.Manage.EmplPanel.EmplManageJFrame;
+import java.awt.Cursor;
 
 public class MovieFrame extends JFrame {
 
@@ -60,6 +61,7 @@ public class MovieFrame extends JFrame {
         jPanel.add(separator);
         
         JButton btnNext = new JButton("Tiếp tục");
+        btnNext.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnNext.setFont(new Font("Arial", Font.BOLD, 18));
         btnNext.setForeground(Color.WHITE);
         btnNext.setBackground(new Color(0, 153, 51));
@@ -76,6 +78,7 @@ public class MovieFrame extends JFrame {
         jPanel.add(separator_1);
         
         btnExit = new JButton("Hủy bỏ");
+        btnExit.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnExit.setIcon(null);
         btnExit.setForeground(Color.WHITE);
         btnExit.setFont(new Font("Arial", Font.BOLD, 18));

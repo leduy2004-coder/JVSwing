@@ -18,6 +18,7 @@ import javax.swing.JButton;
 import java.awt.Component;
 import javax.swing.Box;
 import javax.swing.JComboBox;
+import java.awt.Cursor;
 
 public class StatisticPanel extends JPanel {
 
@@ -169,6 +170,7 @@ public class StatisticPanel extends JPanel {
 		panel_4.add(horizontalStrut_3);
 		
 		btnSeenTable = new JButton("Xem");
+		btnSeenTable.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnSeenTable.setPreferredSize(new Dimension(90, 30));
 		btnSeenTable.setFont(new Font("Arial", Font.PLAIN, 19));
 		panel_4.add(btnSeenTable);
@@ -202,6 +204,7 @@ public class StatisticPanel extends JPanel {
 		panel_5.add(horizontalStrut_4);
 		
 		btnSeenChart = new JButton("Xem");
+		btnSeenChart.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnSeenChart.setFont(new Font("Arial", Font.PLAIN, 19));
 		btnSeenChart.setPreferredSize(new Dimension(90, 30));
 		panel_5.add(btnSeenChart);

@@ -54,6 +54,7 @@ public class ScheduleDAO implements DAOInterface<ScheduleModel> {
             while (rs.next()) {
                 scheduleModel = new ScheduleModel();
                 scheduleModel.setMaPhong(rs.getString("maPhong"));
+                scheduleModel.setMaSC(rs.getString("maSuat"));
                 scheduleModel.setMaPhim(rs.getString("maPhim"));
                 scheduleModel.setMaCa(rs.getString("maCa"));
                 scheduleModel.setNgayChieu(rs.getDate("ngayChieu"));
