@@ -12,8 +12,8 @@ import java.util.List;
 public class CustomerService implements ICustomerService {
 
     @Override
-    public int save(CustomerModel customerModel) {
-        return CustomerDAO.getInstance().insert(customerModel);
+    public CustomerModel save(CustomerModel customerModel) {
+        return CustomerDAO.getInstance().insertGetId(customerModel);
     }
 
     @Override

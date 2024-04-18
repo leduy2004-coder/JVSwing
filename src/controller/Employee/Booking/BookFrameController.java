@@ -1,8 +1,10 @@
 package controller.Employee.Booking;
 
 import Service.impl.BookingService;
+import Service.impl.CustomerService;
 import model.BookChairModel;
 import model.BookTicketModel;
+import model.CustomerModel;
 import model.ScheduleModel;
 import utility.SessionUtil;
 
@@ -20,16 +22,17 @@ public class BookFrameController {
     private JFrame frame;
     private BookingService bookingService;
     private BookTicketModel bookTicketModel;
-    private JLabel labelDate;
+    private JFrame book;
 
-    public BookFrameController(ScheduleModel sche, int money, List<BookChairModel> listChair,JButton btnSave, JButton btnExit,JFrame frame,JLabel labelDate) {
+
+    public BookFrameController(ScheduleModel sche, int money, List<BookChairModel> listChair,JButton btnSave, JButton btnExit,JFrame frame,JFrame book) {
         this.sche = sche;
         this.money = money;
         this.listChair = listChair;
         this.btnSave = btnSave;
         this.btnExit= btnExit;
         this.frame = frame;
-        this.labelDate = labelDate;
+        this.book =book;
         bookingService = new BookingService();
         bookTicketModel = new BookTicketModel();
     }
@@ -40,17 +43,20 @@ public class BookFrameController {
             public void mouseClicked(MouseEvent e) {
                 String maBook;
                 bookTicketModel.setMaNV(SessionUtil.getInstance().getValueEmpl().getMaNV());
-                bookTicketModel.setMaKH(null);
                 bookTicketModel.setMaVe(null);
+                bookTicketModel.setMaKH(null);
                 bookTicketModel.setMaSuat(sche.getMaSC());
                 bookTicketModel.setTongTien(money);
                 bookTicketModel.setNgayMua(sche.getNgayChieu());
-                System.out.println(bookTicketModel.getNgayMua());
-                maBook = bookingService.insertBookTicket(bookTicketModel);
-                System.out.println(maBook);
-                for (BookChairModel bookChairModel:listChair) {
-                    bookChairModel.setMaBook(maBook);
-                    bookingService.insertBookChair(bookChairModel);
+                if(showDialog()){
+                    maBook = bookingService.insertBookTicket(bookTicketModel).getMaBook();
+                    for (BookChairModel bookChairModel:listChair) {
+                        bookChairModel.setMaBook(maBook);
+                        bookingService.insertBookChair(bookChairModel);
+                    }
+                    JOptionPane.showMessageDialog(null,"Đặt thành công !!","Thông báo",JOptionPane.INFORMATION_MESSAGE);
+                    book.dispose();
+                    frame.dispose();
                 }
             }
         });
@@ -60,5 +66,10 @@ public class BookFrameController {
                 frame.dispose();
             }
         });
+    }
+    private boolean showDialog() {
+        int dialogResult = JOptionPane.showConfirmDialog(null,
+                "Bạn có muốn thêm không ?", "Thông báo", JOptionPane.YES_NO_OPTION);
+        return dialogResult == JOptionPane.YES_OPTION;
     }
 }

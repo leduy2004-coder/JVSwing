@@ -1,27 +1,13 @@
 package controller.Manage.Employee;
 
 import Service.impl.EmployeeService;
-import controller.Employee.Movie.EventMovie;
-import model.CustomerModel;
 import model.EmployeeModel;
-import model.MovieModel;
-import utility.ClassTableModel;
-import utility.SetTable;
 import view.Manage.EmplPanel.EmplManageJFrame;
-import view.Manage.ManagementView;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
-import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.sql.Date;
-import java.util.List;
 
 public class EmplManageController extends EventEmpl {
     private JPanel jpnView;

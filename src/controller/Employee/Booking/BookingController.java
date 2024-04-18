@@ -7,6 +7,7 @@ import model.ScheduleModel;
 import utility.SetTable;
 import view.Employee.BookingPanel.BookingChair;
 import view.Employee.BookingPanel.BookingPanel;
+import view.Employee.BookingPanel.FilterFrame;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -56,6 +57,16 @@ public class BookingController {
                         JOptionPane.showMessageDialog(null,"Không tìm thấy suất chiếu !!","Thông báo",JOptionPane.ERROR_MESSAGE);
                 }else
                     JOptionPane.showMessageDialog(null,"Chọn ngày hiển thị !!","Thông báo",JOptionPane.ERROR_MESSAGE);
+            }
+        });
+        book.btnLc.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                FilterFrame frame = new FilterFrame();
+                frame.setLocationRelativeTo(null);
+                frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                frame.setResizable(false);
+                frame.setVisible(true);
             }
         });
     }

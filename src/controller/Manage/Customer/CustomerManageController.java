@@ -2,24 +2,12 @@ package controller.Manage.Customer;
 
 import Service.impl.CustomerService;
 import model.CustomerModel;
-import model.MovieModel;
-import utility.ClassTableModel;
-import utility.SetTable;
 import view.Manage.CustomerPanel.CustomerManageJFrame;
-import view.Manage.ManagementView;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
-import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.sql.Date;
-import java.util.List;
 
 public class CustomerManageController extends EventCustomer{
     private JPanel jpnView;

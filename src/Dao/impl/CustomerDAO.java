@@ -2,6 +2,7 @@
 package Dao.impl;
 import Dao.DAOInterface;
 import Dao.SQLSEVERDataAccess;
+import model.BookTicketModel;
 import model.CustomerModel;
 
 import java.sql.*;
@@ -15,11 +16,27 @@ public class CustomerDAO implements DAOInterface<CustomerModel> {
         return new CustomerDAO();
     }
 
+    public CustomerModel insertGetId(CustomerModel c) {
+        CustomerModel result = new CustomerModel();
+        try {
+            String sql = "INSERT INTO KhachHang (hoTen, sdt, ngaySinh, email,tinhTrang, tenTK, matKhau) VALUES (?,?,?,?,?,?,?)";
+            ResultSet rs = con.getResultSet(sql, c.getHoTen(),c.getSdt(),(Date)c.getNgaySinh(),c.getEmail(),c.isTinhTrang(),c.getTentk(),c.getMatKhau());
+            CustomerModel customerModel = null;
+            while (rs.next()) {
+                customerModel = new CustomerModel();
+                customerModel.setMaKH(rs.getString("maBook"));
+                result = customerModel;
+                break;
+            }
+        }catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return result;
+    }
+
     @Override
-    public int insert(CustomerModel c) {
-        String sql = "INSERT INTO KhachHang (hoTen, sdt, ngaySinh, email,tinhTrang, tenTK, matKhau) VALUES (?,?,?,?,?,?,?)";
-        int k = con.ExecuteUpdateSQL(sql, c.getHoTen(),c.getSdt(),(Date)c.getNgaySinh(),c.getEmail(),c.isTinhTrang(),c.getTentk(),c.getMatKhau());
-        return k;
+    public int insert(CustomerModel customerModel) {
+        return 0;
     }
 
     @Override

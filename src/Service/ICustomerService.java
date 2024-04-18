@@ -6,7 +6,7 @@ import model.EmployeeModel;
 import java.util.List;
 
 public interface ICustomerService {
-    public int save(CustomerModel customerModel);
+    public CustomerModel save(CustomerModel customerModel);
     public List<CustomerModel> selectAll();
 
     public int update(CustomerModel customerModel);

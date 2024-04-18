@@ -19,6 +19,7 @@ import java.awt.Component;
 import javax.swing.Box;
 import javax.swing.JComboBox;
 import java.awt.Cursor;
+import javax.swing.JTextField;
 
 public class StatisticPanel extends JPanel {
 
@@ -33,6 +34,7 @@ public class StatisticPanel extends JPanel {
 	public JButton btnSeenTable;
 	public JButton btnSeenChart;
 	public JComboBox jcbYear;
+	public JTextField jtfSearch;
 	public StatisticPanel() {
 		setLayout(new BorderLayout(0, 0));
 		setBorder(new EmptyBorder(10, 10, 10, 10));
@@ -174,6 +176,9 @@ public class StatisticPanel extends JPanel {
 		btnSeenTable.setPreferredSize(new Dimension(90, 30));
 		btnSeenTable.setFont(new Font("Arial", Font.PLAIN, 19));
 		panel_4.add(btnSeenTable);
+		
+		jtfSearch = new JTextField();
+	
 		
 		jpnTable = new JPanel();
 		bottomPanel.add(jpnTable, BorderLayout.CENTER);
