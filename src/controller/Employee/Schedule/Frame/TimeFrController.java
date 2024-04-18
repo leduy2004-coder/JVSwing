@@ -1,9 +1,7 @@
 package controller.Employee.Schedule.Frame;
 
 import Service.impl.ScheduleService;
-import Service.impl.StatisticService;
 import com.toedter.calendar.JDateChooser;
-import controller.Manage.Statistic.StatisticController;
 import model.ShiftModel;
 import view.Employee.SchedulePanel.Frame.ShiftsFrame;
 

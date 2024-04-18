@@ -55,36 +55,31 @@ public class SQLSEVERDataAccess {
 
     public String insertAndGetId(String SQL, Object... param) {
         PreparedStatement ps = null;
-        ResultSet rs = null;
-        String generatedId = "";
+        String generatedMaQL = null;
         try {
+            cnn.setAutoCommit(false);
             ps = cnn.prepareStatement(SQL, Statement.RETURN_GENERATED_KEYS);
             int i = 1;
             for (Object value : param) {
                 ps.setObject(i, value);
                 i++;
             }
-            ps.executeUpdate();
-            rs = ps.getGeneratedKeys();
-            if (rs.next()) {
-                generatedId = rs.getString(1);
+            int affectedRows = ps.executeUpdate();
+            if (affectedRows > 0) {
+                ResultSet rs = ps.getGeneratedKeys();
+                if (rs.next()){
+                    generatedMaQL = rs.getString(1);
+                    System.out.println("Generated maQL: " + generatedMaQL);
+                }
+                cnn.commit();
             }
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
-        } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (ps != null) {
-                    ps.close();
-                }
-            } catch (SQLException ex) {
-                throw new RuntimeException(ex);
-            }
         }
-        return generatedId;
+        return generatedMaQL;
     }
+
+
     //SQL (DELETE, UPDATE, INSERT)
     //INSERT INTO TBLOAINHANVIEN(IDLOAINHANVIEN,TENLOAINHANVIEN) VALUES(1,'NHAN VIEN BIEN CHE')
     public int ExecuteUpdateSQL(String SQL) {

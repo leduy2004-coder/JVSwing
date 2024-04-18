@@ -4,18 +4,14 @@ import Service.impl.MovieService;
 import Service.impl.TypeMovieService;
 import model.MovieModel;
 import model.TypeMovieModel;
-import utility.SetTable;
 import view.Employee.MoviePanel.MovieJFrame;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 
 public class MovieFrameController extends EventMovie{

@@ -40,6 +40,7 @@ public class ScheduleFrController {
                 scheduleModel.setMaPhim(movie.getMaPhim());
                 scheduleModel.setMaPhong(maPhong);
                 scheduleModel.setNgayChieu(covertDateToDateSql(jdcDate.getDate()));
+                scheduleModel.setTinhTrang(true);
                 if(showDialog()){
                     scheduleService.save(scheduleModel);
                     JOptionPane.showMessageDialog(null, "Đã thêm thành công !!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
