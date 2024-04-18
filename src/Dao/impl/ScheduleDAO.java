@@ -21,8 +21,8 @@ public class ScheduleDAO implements DAOInterface<ScheduleModel> {
 
     @Override
     public int insert(ScheduleModel s) {
-        String sql = "INSERT INTO SuatChieu (maPhim, maPhong, maCa, ngayChieu) VALUES (?,?,?,?)";
-        int k = con.ExecuteUpdateSQL(sql,s.getMaPhim(),s.getMaPhong(),s.getMaCa(), (Date) s.getNgayChieu());
+        String sql = "INSERT INTO SuatChieu (maPhim, maPhong, maCa, ngayChieu,tinhTrang) VALUES (?,?,?,?,?)";
+        int k = con.ExecuteUpdateSQL(sql,s.getMaPhim(),s.getMaPhong(),s.getMaCa(), (Date) s.getNgayChieu(), s.isTinhTrang());
         return k;
     }
 

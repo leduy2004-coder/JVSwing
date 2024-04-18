@@ -49,7 +49,7 @@ public class BookingController {
                     if(listItem.size() > 0 ){
                         table = setTable.setDataToTable(book.pnTable,COLUMNS,listItem,book.jtfSearch,methodNames);
                         sche = new ScheduleModel();
-                        getData(table,sche);
+                        sche = getData(table,sche);
                         setEvent(sche);
                     }
                     else

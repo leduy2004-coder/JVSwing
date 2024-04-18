@@ -7,7 +7,15 @@ public class ScheduleModel {
     private String maPhong;
     private String maCa;
     private Date ngayChieu;
+    private boolean tinhTrang;
 
+    public boolean isTinhTrang() {
+        return tinhTrang;
+    }
+
+    public void setTinhTrang(boolean tinhTrang) {
+        this.tinhTrang = tinhTrang;
+    }
 
     public String getMaSC() {
         return maSC;
