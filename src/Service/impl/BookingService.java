@@ -2,6 +2,7 @@ package Service.impl;
 
 import Dao.impl.BookingDAO;
 import Service.IBookingService;
+import bean.FilterBean;
 import model.BookChairModel;
 import model.BookTicketModel;
 
@@ -15,12 +16,17 @@ public class BookingService implements IBookingService {
     }
 
     @Override
-    public String insertBookTicket(BookTicketModel b) {
+    public BookTicketModel insertBookTicket(BookTicketModel b) {
         return BookingDAO.getInstance().insertBookTicket(b);
     }
 
     @Override
     public List<BookChairModel> selectChair(String maSC) {
         return BookingDAO.getInstance().selectChair(maSC);
+    }
+
+    @Override
+    public List<FilterBean> selectByPhone(String phone) {
+        return BookingDAO.getInstance().selectByPhone(phone);
     }
 }

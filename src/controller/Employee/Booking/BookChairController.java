@@ -104,7 +104,7 @@ public class BookChairController {
                 if(money==0)
                     JOptionPane.showMessageDialog(null,"Vui lòng chọn ghế !!","Thông báo",JOptionPane.ERROR_MESSAGE);
                 else{
-                    BookingFrame bookingFrame = new BookingFrame(sche,money,chairBook,listChair,lbName);
+                    BookingFrame bookingFrame = new BookingFrame(sche,money,chairBook,listChair,lbName,book);
                     bookingFrame.setLocationRelativeTo(null);
                     bookingFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                     bookingFrame.setResizable(false);

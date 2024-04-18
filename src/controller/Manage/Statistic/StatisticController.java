@@ -4,18 +4,16 @@ import Service.impl.StatisticService;
 import bean.ChartStatisticBean;
 import bean.DataStatisticBean;
 import bean.TableStatisticBean;
+import model.MovieModel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
-import utility.ClassTableModel;
+import utility.SetTable;
 import view.Manage.StatisticPanel.StatisticPanel;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
-import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -27,17 +25,22 @@ public class StatisticController {
     StatisticService statisticService = new StatisticService();
     ChartStatisticBean chart;
     DataStatisticBean data;
-    private ClassTableModel classTableModel = null;
+
     TableStatisticBean table;
-    private final String[] COLUMNS = {"STT","Tên phim","Số buổi chiếu","Số vé bán ra","Tổng doanh thu"};
-    private TableRowSorter<TableModel> rowSorter = null;
+    private final String[] COLUMNS = {"Tên phim","Số buổi chiếu","Số vé bán ra","Tổng doanh thu"};
+    String[] methodNames = {"getMovieName", "getTotalDate", "getTotalTicket","getTotalTurnover"};
+    private String movieName;
+    private int totalDate;
+    private int totalTicket;
+    private double totalTurnover;
+    SetTable<MovieModel> setTable = SetTable.getInstance();
+
 
     public StatisticController(StatisticPanel statisticPanel) {
         this.statistic =statisticPanel;
         chart = new ChartStatisticBean();
         data = new DataStatisticBean();
         table = new TableStatisticBean();
-        this.classTableModel = new ClassTableModel();
     }
 
     public void setData(){
@@ -106,30 +109,7 @@ public class StatisticController {
                     if((statistic.jdcBegin.getDate()).compareTo(statistic.jdcEnd.getDate())<=0) {
                         List<TableStatisticBean> listItem = statisticService.getTable(covertDateToDateSql(statistic.jdcBegin.getDate()),covertDateToDateSql(statistic.jdcEnd.getDate()));
                         if(listItem.size()>0){
-                            DefaultTableModel model = classTableModel.setTableStatistic(listItem, COLUMNS);
-                            JTable table = new JTable(model);
-
-                            rowSorter = new TableRowSorter<>(table.getModel());
-                            table.setRowSorter(rowSorter);
-
-                            table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
-                            table.getTableHeader().setPreferredSize(new Dimension(100, 29));
-                            table.setRowHeight(39);
-                            table.getColumnModel().getColumn(1).setPreferredWidth(200);
-                            table.getColumnModel().getColumn(2).setPreferredWidth(100);
-                            table.getColumnModel().getColumn(4).setPreferredWidth(100);
-
-                            table.validate();
-                            table.repaint();
-
-                            JScrollPane scroll = new JScrollPane();
-                            scroll.getViewport().add(table);
-                            scroll.setPreferredSize(new Dimension(1350, 400));
-                            statistic.jpnTable.removeAll();
-                            statistic.jpnTable.setLayout(new CardLayout());
-                            statistic.jpnTable.add(scroll);
-                            statistic.jpnTable.validate();
-                            statistic.jpnTable.repaint();
+                            setTable.setDataToTable(statistic.jpnTable,COLUMNS,listItem,statistic.jtfSearch,methodNames);
                         }
                         else {
                             JOptionPane.showMessageDialog(null,"Không tìm thấy dữ liệu !!","Thông báo",JOptionPane.ERROR_MESSAGE);
