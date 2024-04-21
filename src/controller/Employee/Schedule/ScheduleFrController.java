@@ -1,6 +1,6 @@
 package controller.Employee.Schedule;
 
-import Service.impl.ScheduleService;
+import Dao.impl.ScheduleDAO;
 import com.toedter.calendar.JDateChooser;
 import model.MovieModel;
 import model.ScheduleModel;
@@ -21,7 +21,6 @@ public class ScheduleFrController {
     private MovieModel movie;
     private String maPhong;
     private JRadioButton radioSelected = null;
-    ScheduleService scheduleService = new ScheduleService();
     public ScheduleFrController(Frame frame, JButton btnSave, JButton btnRemove, JDateChooser jdcDate,ShiftModel shift,MovieModel movie,String maPhong) {
         this.frame = frame;
         this.btnSave = btnSave;
@@ -42,7 +41,7 @@ public class ScheduleFrController {
                 scheduleModel.setNgayChieu(covertDateToDateSql(jdcDate.getDate()));
                 scheduleModel.setTinhTrang(true);
                 if(showDialog()){
-                    scheduleService.save(scheduleModel);
+                    ScheduleDAO.getInstance().insert(scheduleModel);
                     JOptionPane.showMessageDialog(null, "Đã thêm thành công !!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                     frame.dispose();
                 }

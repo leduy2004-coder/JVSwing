@@ -1,6 +1,6 @@
 package controller.Employee.Schedule;
 
-import Service.impl.ScheduleService;
+import Dao.impl.ScheduleDAO;
 import model.MovieModel;
 import model.ScheduleModel;
 import model.ShiftModel;
@@ -22,8 +22,6 @@ import java.util.Objects;
 
 public class ScheduleController {
     private SchedulePanel sche;
-
-    private ScheduleService scheduleService;
     private ScheduleModel scheduleModel;
     private ShiftModel shiftModel;
     private MovieModel movieModel;
@@ -40,7 +38,6 @@ public class ScheduleController {
 
     public ScheduleController(SchedulePanel sche) {
         this.sche = sche;
-        scheduleService = new ScheduleService();
         scheduleModel = new ScheduleModel();
         shiftModel = new ShiftModel();
         movieModel = new MovieModel();
@@ -60,7 +57,7 @@ public class ScheduleController {
                 if (sche.jdcBegin.getDate() != null && sche.jdcEnd.getDate() != null) {
                     if ((sche.jdcBegin.getDate()).compareTo(sche.jdcEnd.getDate()) <= 0) {
                         List<ScheduleModel> list = new ArrayList<>();
-                        list = scheduleService.selectAllDate(covertDateToDateSql(sche.jdcBegin.getDate()), covertDateToDateSql(sche.jdcEnd.getDate()));
+                        list = ScheduleDAO.getInstance().selectAllDate(covertDateToDateSql(sche.jdcBegin.getDate()), covertDateToDateSql(sche.jdcEnd.getDate()));
                         if (list.size() > 0) {
                             sche.jbxShift.removeAllItems();
                             sche.jbxShift.addItem(new ShiftModel());
@@ -69,8 +66,8 @@ public class ScheduleController {
                             sche.jbxRoom.removeAllItems();
                             sche.jbxRoom.addItem("");
                             for (ScheduleModel s : list) {
-                                movieModel = scheduleService.selectByMPhim(s);
-                                shiftModel = scheduleService.selectByMCa(s);
+                                movieModel = ScheduleDAO.getInstance().selectByMPhim(s);
+                                shiftModel = ScheduleDAO.getInstance().selectByMCa(s);
                                 if (!containItem(sche.jbxName, movieModel.getTenPhim()))
                                     sche.jbxName.addItem(movieModel);
                                 if (!containItem(sche.jbxShift, shiftModel.getTenCa()))
@@ -216,7 +213,7 @@ public class ScheduleController {
                     if (scheduleModel1.getMaSC() == null)
                         JOptionPane.showMessageDialog(null, "Kích chuột vào 1 dòng của table để xóa !!", "Thông báo", JOptionPane.ERROR_MESSAGE);
                     else {
-                        scheduleService.delete(scheduleModel1);
+                        ScheduleDAO.getInstance().delete(scheduleModel1);
                         loadTable();
                     }
                 }
@@ -249,7 +246,7 @@ public class ScheduleController {
         s.setMaCa(((ShiftModel) sche.jbxShift.getSelectedItem()).getMaCa());
         a = sche.jbxRoom.getSelectedIndex();
         s.setMaPhong((String) sche.jbxRoom.getItemAt(a));
-        return listItem = scheduleService.selectAllToTal(covertDateToDateSql(sche.jdcBegin.getDate()), covertDateToDateSql(sche.jdcEnd.getDate()), s);
+        return listItem = ScheduleDAO.getInstance().selectAllToTal(covertDateToDateSql(sche.jdcBegin.getDate()), covertDateToDateSql(sche.jdcEnd.getDate()), s);
     }
 
     private void loadTable() {

@@ -1,7 +1,7 @@
 package controller;
 
-import Service.impl.EmployeeService;
-import Service.impl.ManageService;
+import Dao.impl.EmployeeDAO;
+import Dao.impl.ManageDAO;
 import model.EmployeeModel;
 import model.ManageModel;
 import utility.SessionUtil;
@@ -23,9 +23,6 @@ public class LoginController {
     private JTextField txtUsername;
     private JPasswordField txtpassword;
     private JLabel jlbMess;
-    private EmployeeService employeeService;
-    private ManageService manageService;
-
     public LoginController(LoginView dialog, JButton btnLogin, JButton btnExit, JTextField txtUsername, JPasswordField txtpassword, JLabel jlbMess) {
         this.dialog = dialog;
         this.btnLogin = btnLogin;
@@ -33,9 +30,6 @@ public class LoginController {
         this.txtUsername = txtUsername;
         this.txtpassword = txtpassword;
         this.jlbMess = jlbMess;
-
-        employeeService = new EmployeeService();
-        manageService = new ManageService();
     }
 
     public void LoginEvent() {
@@ -128,8 +122,8 @@ public class LoginController {
             if (txtUsername.getText().length() == 0 || password.length() == 0) {
                 jlbMess.setText("Phải nhập đầy đủ dữ liệu!");
             } else {
-                EmployeeModel employeeModel = employeeService.selectByUserNameAndPassword(txtUsername.getText(), password);
-                ManageModel manageModel = manageService.selectByUserNameAndPassword(txtUsername.getText(), password);
+                EmployeeModel employeeModel = EmployeeDAO.getInstance().selectByUserNameAndPassword(txtUsername.getText(), password);
+                ManageModel manageModel = ManageDAO.getInstance().selectByUserNameAndPassword(txtUsername.getText(), password);
                 if (employeeModel == null && manageModel == null) {
                     jlbMess.setText("Tài khoản hoặc mật khẩu không đúng!");
                 } else {

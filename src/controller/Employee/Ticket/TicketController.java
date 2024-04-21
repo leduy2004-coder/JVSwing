@@ -1,6 +1,5 @@
 package controller.Employee.Ticket;
 
-import Service.impl.TicketService;
 import model.MovieModel;
 import view.Employee.TicketPanel.TicketFrame;
 
@@ -18,15 +17,12 @@ public class TicketController extends EventTicket{
 
     private MovieModel movieModel;
 
-    private TicketService ticketService = null;
-
 
     public TicketController(JPanel jpnView, JButton btnAdd, JButton btnRemove, JTextField jtfSearch) {
         this.jpnView = jpnView;
         this.btnAdd = btnAdd;
         this.btnRemove = btnRemove;
         this.jtfSearch = jtfSearch;
-        this.ticketService = new TicketService();
     }
 
     public void displayView() {

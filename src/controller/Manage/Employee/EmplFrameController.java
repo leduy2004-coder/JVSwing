@@ -1,6 +1,6 @@
 package controller.Manage.Employee;
 
-import Service.impl.EmployeeService;
+import Dao.impl.EmployeeDAO;
 import model.EmployeeModel;
 import utility.SessionUtil;
 import view.Manage.EmplPanel.EmplManageJFrame;
@@ -13,7 +13,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class EmplFrameController extends EventEmpl{
-    private EmployeeService employeeService;
     private EmployeeModel employeeModel;
     private String msg;
     private EmplManageJFrame empl;
@@ -25,7 +24,6 @@ public class EmplFrameController extends EventEmpl{
         this.jpnView = jpnView;
         this.jtfSearch = jtfSearch;
         this.btnRemove = btnRemove;
-        employeeService = new EmployeeService();
     }
 
     public void setView(EmployeeModel employeeModel) {
@@ -75,14 +73,14 @@ public class EmplFrameController extends EventEmpl{
                         if(employeeModel.getMaNV() == null){
                             msg = "Bạn muốn thêm dữ liệu không ?";
                             if(showDialog(msg)){
-                                employeeService.save(employeeModel);
+                                EmployeeDAO.getInstance().insert(employeeModel);
                                 empl.dispose();
                                 loadTable(jpnView,jtfSearch,btnRemove);
                             }
                         }else {
                             msg = "Bạn muốn cập nhật dữ liệu không ?";
                             if(showDialog(msg)){
-                                employeeService.update(employeeModel);
+                                EmployeeDAO.getInstance().update(employeeModel);
                                 empl.dispose();
                                 loadTable(jpnView,jtfSearch,btnRemove);
                             }

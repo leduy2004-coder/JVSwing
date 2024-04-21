@@ -1,13 +1,10 @@
 package controller.Employee.Schedule.Frame;
 
-import Service.impl.ScheduleService;
+import Dao.impl.ScheduleDAO;
 import com.toedter.calendar.JDateChooser;
-import controller.Employee.Schedule.ScheduleController;
 import model.MovieModel;
 import model.RoomModel;
 import model.ShiftModel;
-import utility.ShiftRadioModel;
-import view.Employee.SchedulePanel.Frame.MovieFrame;
 import view.Employee.SchedulePanel.ScheduleFrame;
 
 import javax.swing.*;
@@ -25,7 +22,6 @@ public class RoomFrController {
     private ShiftModel shift;
     private MovieModel movie;
     private JRadioButton radioSelected = null;
-    ScheduleService scheduleService = new ScheduleService();
     public RoomFrController(Frame frame, JButton btnNext, JButton btnRemove, JDateChooser jdcDate,ShiftModel shift,MovieModel movie) {
         this.frame = frame;
         this.btnNext = btnNext;
@@ -35,7 +31,7 @@ public class RoomFrController {
         this.movie = movie;
     }
     public void setDataAndEvent(JRadioButton jrb1, JRadioButton jrb2, JRadioButton jrb3, JRadioButton jrb4){
-        List<RoomModel> list = scheduleService.selectAllRoom(covertDateToDateSql(jdcDate.getDate()),shift);
+        List<RoomModel> list = ScheduleDAO.getInstance().selectAllRoom(covertDateToDateSql(jdcDate.getDate()),shift);
         for (int i = 0; i < list.size(); i++) {
             switch (i) {
                 case 0:

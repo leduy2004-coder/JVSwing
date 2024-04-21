@@ -1,6 +1,6 @@
 package controller.Manage.Employee;
 
-import Service.impl.EmployeeService;
+import Dao.impl.EmployeeDAO;
 import model.EmployeeModel;
 import model.MovieModel;
 import utility.SetTable;
@@ -22,7 +22,6 @@ public abstract class EventEmpl {
     private final String[] COLUMNS = {"Mã nhân viên", "Tên nhân viên", "Số điện thoại", "Giới tính","Ngày sinh", "Địa chỉ","CCCD", "Trạng thái", "Tài khoản", "Mật khẩu"};
     String[] methodNames = {"getMaNV", "getHoTen", "getSdt","isGioiTinh","getNgaySinh","getDiaChi","getCCCD","isTinhTrang","getTentk","getMatKhau"};
 
-    EmployeeService employeeService = new EmployeeService();
     private void eventTable(JTable table,JPanel jpnView, JTextField jtfSearch,JButton btnRemove) {
         table.addMouseListener(new MouseAdapter() {
             @Override
@@ -84,7 +83,7 @@ public abstract class EventEmpl {
                     if (employeeModel.getMaNV() == null)
                         JOptionPane.showMessageDialog(null, "Kích chuột vào 1 dòng của table để xóa !!", "Thông báo", JOptionPane.ERROR_MESSAGE);
                     else{
-                        employeeService.delete(employeeModel);
+                        EmployeeDAO.getInstance().delete(employeeModel);
                         loadTable(jpnView,jtfSearch,btnRemove);
                     }
                 }
@@ -112,7 +111,7 @@ public abstract class EventEmpl {
         jpnView.removeAll();
         jpnView.validate();
         jpnView.repaint();
-        List<EmployeeModel> listItem = employeeService.selectAll();
+        List<EmployeeModel> listItem = EmployeeDAO.getInstance().selectAll();
         MouseListener[] listeners = btnRemove.getMouseListeners();
         for (MouseListener listener : listeners) {
             btnRemove.removeMouseListener(listener);

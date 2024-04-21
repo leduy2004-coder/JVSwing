@@ -1,10 +1,8 @@
 package controller.Employee.Booking;
 
-import Service.impl.BookingService;
-import Service.impl.CustomerService;
+import Dao.impl.BookingDAO;
 import model.BookChairModel;
 import model.BookTicketModel;
-import model.CustomerModel;
 import model.ScheduleModel;
 import utility.SessionUtil;
 
@@ -20,7 +18,6 @@ public class BookFrameController {
     private JButton btnSave;
     private JButton btnExit;
     private JFrame frame;
-    private BookingService bookingService;
     private BookTicketModel bookTicketModel;
     private JFrame book;
 
@@ -33,7 +30,6 @@ public class BookFrameController {
         this.btnExit= btnExit;
         this.frame = frame;
         this.book =book;
-        bookingService = new BookingService();
         bookTicketModel = new BookTicketModel();
     }
 
@@ -49,10 +45,10 @@ public class BookFrameController {
                 bookTicketModel.setTongTien(money);
                 bookTicketModel.setNgayMua(sche.getNgayChieu());
                 if(showDialog()){
-                    maBook = bookingService.insertBookTicket(bookTicketModel).getMaBook();
+                    maBook = BookingDAO.getInstance().insertBookTicket(bookTicketModel).getMaBook();
                     for (BookChairModel bookChairModel:listChair) {
                         bookChairModel.setMaBook(maBook);
-                        bookingService.insertBookChair(bookChairModel);
+                        BookingDAO.getInstance().insertBookChair(bookChairModel);
                     }
                     JOptionPane.showMessageDialog(null,"Đặt thành công !!","Thông báo",JOptionPane.INFORMATION_MESSAGE);
                     book.dispose();

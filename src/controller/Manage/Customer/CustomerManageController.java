@@ -1,6 +1,5 @@
 package controller.Manage.Customer;
 
-import Service.impl.CustomerService;
 import model.CustomerModel;
 import view.Manage.CustomerPanel.CustomerManageJFrame;
 
@@ -18,15 +17,12 @@ public class CustomerManageController extends EventCustomer{
     private CustomerModel customerModel;
     private JTable table = new JTable();
 
-    private CustomerService customerService;
-
 
     public CustomerManageController(JPanel jpnView, JButton btnAdd, JButton btnRemove, JTextField jtfSearch) {
         this.jpnView = jpnView;
         this.btnAdd = btnAdd;
         this.btnRemove = btnRemove;
         this.jtfSearch = jtfSearch;
-        this.customerService = new CustomerService();
     }
 
     public void displayView() {

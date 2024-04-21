@@ -1,12 +1,8 @@
 package controller.Manage.Customer;
 
-import Service.impl.CustomerService;
-import com.toedter.calendar.JDateChooser;
+import Dao.impl.CustomerDAO;
 import model.CustomerModel;
-import model.MovieModel;
-import utility.SetTable;
 import view.Manage.CustomerPanel.CustomerManageJFrame;
-import view.Manage.ManagementView;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,11 +11,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 public class CustomerFrameController extends EventCustomer{
     private CustomerManageJFrame customer;
-    private CustomerService customerService;
     private CustomerModel customerModel;
     private String msg;
     private JTable table;
@@ -34,7 +28,6 @@ public class CustomerFrameController extends EventCustomer{
         this.jpnView = jpnView;
         this.jtfSearch = jtfSearch;
         this.btnRemove = btnRemove;
-        customerService = new CustomerService();
     }
     public void setView(CustomerModel customerModel) {
         this.customerModel = customerModel;
@@ -73,14 +66,14 @@ public class CustomerFrameController extends EventCustomer{
                         if(customerModel.getMaKH() == null){
                             msg = "Bạn muốn thêm dữ liệu không ?";
                             if(showDialog(msg)){
-                                customerService.save(customerModel);
+                                CustomerDAO.getInstance().insert(customerModel);
                                 customer.dispose();
                                 loadTable(jpnView,jtfSearch,btnRemove);
                             }
                         }else {
                             msg = "Bạn muốn cập nhật dữ liệu không ?";
                             if(showDialog(msg)){
-                                customerService.update(customerModel);
+                                CustomerDAO.getInstance().update(customerModel);
                                 customer.dispose();
                                 loadTable(jpnView,jtfSearch,btnRemove);
                             }

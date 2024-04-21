@@ -1,5 +1,6 @@
 package model;
 
+import java.sql.Blob;
 import java.util.Date;
 
 public class MovieModel {
@@ -11,9 +12,27 @@ public class MovieModel {
     private Date ngayKhoiChieu;
     private int thoiLuong;
     private boolean tinhTrang;
-    private String hinhDaiDien;
+    private Blob hinhDaiDien;
     private String video;
     private String moTa;
+    private String s;
+    private byte[] img;
+
+    public byte[] getImg() {
+        return img;
+    }
+
+    public void setImg(byte[] img) {
+        this.img = img;
+    }
+
+    public String getS() {
+        return s;
+    }
+
+    public void setS(String s) {
+        this.s = s;
+    }
 
     public String getMaPhim() {
         return maPhim;
@@ -79,11 +98,11 @@ public class MovieModel {
         this.tinhTrang = tinhTrang;
     }
 
-    public String getHinhDaiDien() {
+    public Blob getHinhDaiDien() {
         return hinhDaiDien;
     }
 
-    public void setHinhDaiDien(String hinhDaiDien) {
+    public void setHinhDaiDien(Blob hinhDaiDien) {
         this.hinhDaiDien = hinhDaiDien;
     }
 

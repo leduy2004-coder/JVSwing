@@ -1,6 +1,6 @@
 package controller.Employee.Movie;
 
-import Service.impl.MovieService;
+import Dao.impl.MovieDAO;
 import model.MovieModel;
 import utility.SetTable;
 import view.Employee.MoviePanel.MovieJFrame;
@@ -14,7 +14,6 @@ import java.awt.event.MouseListener;
 import java.util.List;
 
 public abstract class EventMovie {
-     MovieService movieService = new MovieService();
     private JTable table = new JTable();
     public final String[] COLUMNS = {"Mã phim", "Tên phim", "Loại phim", "Đạo diễn","Độ tuổi", "Ngày chiếu","Thời lượng", "Trạng thái"};
     String[] methodNames = {"getMaPhim", "getTenPhim", "getTenLoaiPhim","getDaoDien","getDoTuoi","getNgayKhoiChieu","getThoiLuong","isTinhTrang"};
@@ -33,7 +32,7 @@ public abstract class EventMovie {
 
                     MovieModel movieModel1 = new MovieModel();
                     movieModel1.setMaPhim(model.getValueAt(selectedRowIndex, 0).toString());
-                    MovieJFrame jframe = new MovieJFrame(movieService.selectById(movieModel1),jpnView,jtfSearch,btnRemove);
+                    MovieJFrame jframe = new MovieJFrame(MovieDAO.getInstance().selectById(movieModel1),jpnView,jtfSearch,btnRemove);
                     jframe.setLocationRelativeTo(null);
                     jframe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                     jframe.setResizable(false);
@@ -65,7 +64,7 @@ public abstract class EventMovie {
                     if (movieModel.getMaPhim() == null)
                         JOptionPane.showMessageDialog(null, "Kích chuột vào 1 dòng của table để xóa !!", "Thông báo", JOptionPane.ERROR_MESSAGE);
                     else{
-                        movieService.delete(movieModel);
+                        MovieDAO.getInstance().delete(movieModel);
                         loadTable(jpnView,jtfSearch,btnRemove);
                     }
                 }
@@ -90,7 +89,7 @@ public abstract class EventMovie {
         jpnView.removeAll();
         jpnView.validate();
         jpnView.repaint();
-        List<MovieModel> listItem = movieService.selectAll();
+        List<MovieModel> listItem = MovieDAO.getInstance().selectAll();
         MouseListener[] listeners = btnRemove.getMouseListeners();
         for (MouseListener listener : listeners) {
             btnRemove.removeMouseListener(listener);

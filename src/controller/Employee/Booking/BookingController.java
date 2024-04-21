@@ -1,7 +1,6 @@
 package controller.Employee.Booking;
 
-import Service.impl.ScheduleService;
-import bean.BookBean;
+import Dao.impl.ScheduleDAO;
 import model.MovieModel;
 import model.ScheduleModel;
 import utility.SetTable;
@@ -27,10 +26,8 @@ public class BookingController {
     String[] methodNames = {"getMaSC", "getMaPhim", "getMaPhong","getMaCa"};
 
     SetTable<MovieModel> setTable = SetTable.getInstance();
-    private ScheduleService scheduleService;
     public BookingController(BookingPanel book) {
         this.book = book;
-        scheduleService = new ScheduleService();
     }
 
     public void setDataTable(){
@@ -46,7 +43,7 @@ public class BookingController {
                     book.btnBook.removeMouseListener(listener);
                 }
                 if(book.jdDate.getDate() != null){
-                    List<ScheduleModel> listItem = scheduleService.selectAllByDate(covertDateToDateSql(book.jdDate.getDate()));
+                    List<ScheduleModel> listItem = ScheduleDAO.getInstance().selectAllByDate(covertDateToDateSql(book.jdDate.getDate()));
                     if(listItem.size() > 0 ){
                         table = setTable.setDataToTable(book.pnTable,COLUMNS,listItem,book.jtfSearch,methodNames);
                         sche = new ScheduleModel();
@@ -100,8 +97,8 @@ public class BookingController {
                     sche.setMaCa(model.getValueAt(selectedRowIndex,3).toString());
                     sche.setMaPhong(model.getValueAt(selectedRowIndex,2).toString());
                     sche.setNgayChieu(covertDateToDateSql(book.jdDate.getDate()));
-                    book.lbName.setText(scheduleService.selectByMPhim(sche).getTenPhim());
-                    book.lbShift.setText(scheduleService.selectByMCa(sche).getTenCa());
+                    book.lbName.setText(ScheduleDAO.getInstance().selectByMPhim(sche).getTenPhim());
+                    book.lbShift.setText(ScheduleDAO.getInstance().selectByMCa(sche).getTenCa());
                     book.lbDate.setText(covertDateToDateSql(book.jdDate.getDate()).toString());
                     book.lbRoom.setText(sche.getMaPhong());
                 }

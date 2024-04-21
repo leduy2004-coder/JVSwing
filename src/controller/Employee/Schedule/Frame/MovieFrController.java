@@ -1,6 +1,6 @@
 package controller.Employee.Schedule.Frame;
 
-import Service.impl.MovieService;
+import Dao.impl.MovieDAO;
 import com.toedter.calendar.JDateChooser;
 import model.MovieModel;
 import model.ShiftModel;
@@ -22,7 +22,6 @@ public class MovieFrController {
     private ShiftModel shift;
     private JPanel pnTable;
     private JTextField jtfSearch;
-    MovieService movieService = new MovieService();
     SetTable<MovieModel> setTable = SetTable.getInstance();
 
     private final String[] COLUMNS = {"Mã Phim","Tên phim"};
@@ -41,7 +40,7 @@ public class MovieFrController {
     }
     public void setDataAndEvent(){
         JTable table = new JTable();
-        List<MovieModel> list = movieService.selectStatus();
+        List<MovieModel> list = MovieDAO.getInstance().selectStatus();
         table = setTable.setDataToTable(pnTable,COLUMNS,list,jtfSearch,methodNames);
         MovieModel movie = new MovieModel();
         movie = getData(table,movie);

@@ -1,31 +1,19 @@
 package view.Employee.MoviePanel;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Image;
-import java.awt.event.MouseListener;
-import java.security.PublicKey;
-
-import javax.swing.*;
-import javax.swing.border.Border;
-
-import Service.impl.TypeMovieService;
-import controller.Employee.Movie.MovieFrameController;
-
 import com.toedter.calendar.JDateChooser;
-
+import controller.Employee.Movie.MovieFrameController;
 import model.MovieModel;
 import model.TypeMovieModel;
 import view.Manage.EmplPanel.EmplManageJFrame;
+
+import javax.swing.*;
+import javax.swing.border.Border;
+import java.awt.*;
 
 public class MovieJFrame extends JFrame {
 
 
 	private static final long serialVersionUID = 1L;
-    private JFrame frame;
     private JPanel contentPane;
     public JButton btnSave;
     public JButton btnExit;
@@ -35,27 +23,28 @@ public class MovieJFrame extends JFrame {
     public JTextArea jtaDes;
     public JTextArea jtaVideo;
     public JTextField jtfName;
-    public JTextField jtfThumbnail;
     public JTextField jtfYear;
     public JTextField jtfDura;
     public JCheckBox jcbStatus;
     public JLabel jlbId;
+    public JLabel lbCheck;
+    public JButton btnImage;
+    public JLabel lbImage;
 
 
 	public MovieJFrame(MovieModel movieModel, JPanel jpnView, JTextField jtfSearch, JButton btnRemove) {
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(250, 100, 1026, 778);
+		setBounds(250, 100, 1026, 851);
 		contentPane = new JPanel();
         setContentPane(contentPane);
 		contentPane.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.gridheight = 1;
 
         JPanel jPanel = new JPanel();
-        jPanel.setPreferredSize(new Dimension(1000, 720));
+        jPanel.setPreferredSize(new Dimension(1000, 800));
         jPanel.setBackground(new Color(255, 250, 250));
         jPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         jPanel.setLayout(null);
@@ -82,7 +71,7 @@ public class MovieJFrame extends JFrame {
         JSeparator separator_1 = new JSeparator();
         separator_1.setBounds(0, 86, 88, 2);
         jPanel.add(separator_1);
-                JLabel lblNewLabel_1 = new JLabel("Loại phim");
+        JLabel lblNewLabel_1 = new JLabel("Loại phim");
         lblNewLabel_1.setFont(new Font("Arial", Font.PLAIN, 20));
         lblNewLabel_1.setBounds(33, 139, 110, 41);
         jPanel.add(lblNewLabel_1);
@@ -150,7 +139,7 @@ public class MovieJFrame extends JFrame {
         
         JLabel lblNewLabel_1_1_1 = new JLabel("Video");
         lblNewLabel_1_1_1.setFont(new Font("Arial", Font.PLAIN, 20));
-        lblNewLabel_1_1_1.setBounds(33, 468, 126, 41);
+        lblNewLabel_1_1_1.setBounds(33, 582, 126, 41);
         jPanel.add(lblNewLabel_1_1_1);
         
         JLabel lblNewLabel_1_1_2 = new JLabel("Mô tả");
@@ -168,7 +157,7 @@ public class MovieJFrame extends JFrame {
         lblBat.setIcon(new ImageIcon(EmplManageJFrame.class.getResource("/img/key.png")));
         lblBat.setForeground(new Color(255, 0, 0));
         lblBat.setFont(new Font("Arial", Font.ITALIC, 17));
-        lblBat.setBounds(24, 682, 281, 28);
+        lblBat.setBounds(12, 764, 281, 28);
         jPanel.add(lblBat);
         
         JLabel lblNewLabel_2 = new JLabel("");
@@ -186,7 +175,7 @@ public class MovieJFrame extends JFrame {
         jlbId = new JLabel("");
         jlbId.setForeground(new Color(204, 0, 0));
         jlbId.setFont(new Font("Arial", Font.BOLD, 20));
-        jlbId.setBounds(447, 664, 126, 35);
+        jlbId.setBounds(842, 807, 126, 35);
         jPanel.add(jlbId);
 
         JLabel label_4_1 = new JLabel("");
@@ -205,12 +194,6 @@ public class MovieJFrame extends JFrame {
         jbxType.addItem(new TypeMovieModel());
         jbxType.setBounds(157, 139, 292, 41);
         jPanel.add(jbxType);
-        
-        jtfThumbnail = new JTextField();
-        jtfThumbnail.setFont(new Font("Arial", Font.PLAIN, 16));
-        jtfThumbnail.setBounds(157, 371, 292, 41);
-        jPanel.add(jtfThumbnail);
-        jtfThumbnail.setColumns(10);
         
         jtfYear = new JTextField();
         jtfYear.setFont(new Font("Arial", Font.PLAIN, 16));
@@ -231,11 +214,6 @@ public class MovieJFrame extends JFrame {
         
         Border border1 = BorderFactory.createLineBorder(Color.BLACK, 1);
         
-        jtaVideo = new JTextArea();
-        jtaVideo.setFont(new Font("Arial", Font.PLAIN, 15));
-        jtaVideo.setBounds(157, 479, 292, 160);
-        jtaVideo.setBorder(border1);
-        
         JLabel lblNewLabel_3 = new JLabel("Phút");
         lblNewLabel_3.setFont(new Font("Arial", Font.BOLD, 15));
         lblNewLabel_3.setBounds(923, 300, 45, 13);
@@ -254,17 +232,37 @@ public class MovieJFrame extends JFrame {
         jPanel.add(scroll);
         
         JScrollPane scroll1 = new JScrollPane();
-        scroll1.setBounds(157, 479, 292, 160);
-        scroll1.setViewportView(jtaVideo);
+        scroll1.setBounds(157, 580, 292, 160);
         scroll1.setPreferredSize(new Dimension(292, 160));
         
         jPanel.add(scroll1);
         
+        jtaVideo = new JTextArea();
+        scroll1.setViewportView(jtaVideo);
+        jtaVideo.setFont(new Font("Arial", Font.PLAIN, 15));
+        jtaVideo.setBorder(border1);
+        
         JLabel label_4_1_1 = new JLabel("");
         label_4_1_1.setIcon(new ImageIcon(MovieJFrame.class.getResource("/img/key.png")));
         label_4_1_1.setFont(new Font("Dialog", Font.BOLD, 18));
-        label_4_1_1.setBounds(463, 548, 55, 24);
+        label_4_1_1.setBounds(463, 642, 55, 24);
         jPanel.add(label_4_1_1);
+        
+        btnImage = new JButton("Chọn ảnh");
+        btnImage.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        btnImage.setFont(new Font("Arial", Font.PLAIN, 16));
+        btnImage.setBounds(157, 371, 292, 34);
+        jPanel.add(btnImage);
+        
+        lbCheck = new JLabel("");
+        lbCheck.setIcon(null);
+        lbCheck.setFont(new Font("Dialog", Font.BOLD, 18));
+        lbCheck.setBounds(463, 371, 55, 34);
+        jPanel.add(lbCheck);
+        
+        lbImage = new JLabel("");
+        lbImage.setBounds(157, 415, 292, 124);
+        jPanel.add(lbImage);
 
         MovieFrameController movieFrameController = new MovieFrameController(this,jpnView,jtfSearch,btnRemove);
 	    if(movieModel == null) movieFrameController.CreateOrUpdate();

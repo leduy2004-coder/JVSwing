@@ -1,7 +1,6 @@
 package controller.Employee.Booking;
 
-import Service.impl.BookingService;
-import Service.impl.MovieService;
+import Dao.impl.BookingDAO;
 import bean.BookBean;
 import model.BookChairModel;
 import model.ScheduleModel;
@@ -19,27 +18,23 @@ import java.util.List;
 public class BookChairController {
     private BookingChair book;
     private ScheduleModel sche;
-    private MovieService movieService;
     private List<BookBean> listItem;
     private JLabel lbName;
     String chairBook;
     int t, money,c;
     private List<BookChairModel> listChair;
     private List<BookChairModel> listChairBook;
-    private BookingService bookingService;
     public BookChairController(BookingChair book, List<BookBean> list, ScheduleModel sche, JLabel lbName) {
         this.book = book;
         this.listItem = list;
         this.sche = sche;
         this.lbName = lbName;
-        movieService = new MovieService();
         listChair = new ArrayList<BookChairModel>();
         listChairBook = new ArrayList<BookChairModel>();
-        bookingService = new BookingService();
     }
 
     public void setChair(){
-        listChairBook = bookingService.selectChair(sche.getMaSC());
+        listChairBook = BookingDAO.getInstance().selectChair(sche.getMaSC());
         System.out.println(sche.getMaSC());
         t = 0;
         money = 0;

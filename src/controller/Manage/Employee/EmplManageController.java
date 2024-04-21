@@ -1,6 +1,5 @@
 package controller.Manage.Employee;
 
-import Service.impl.EmployeeService;
 import model.EmployeeModel;
 import view.Manage.EmplPanel.EmplManageJFrame;
 
@@ -17,15 +16,12 @@ public class EmplManageController extends EventEmpl {
 
     private EmployeeModel employeeModel;
 
-//    obj[3] = employeeModel.isGioiTinh() ? "Nam" : "Nữ";
-
 
     public EmplManageController(JPanel jpnView, JButton btnAdd, JButton btnRemove, JTextField jtfSearch) {
         this.jpnView = jpnView;
         this.btnAdd = btnAdd;
         this.btnRemove = btnRemove;
         this.jtfSearch = jtfSearch;
-        this.employeeService = new EmployeeService();
     }
     
     public void displayView() {

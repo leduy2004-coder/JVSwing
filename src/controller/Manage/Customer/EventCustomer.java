@@ -1,6 +1,6 @@
 package controller.Manage.Customer;
 
-import Service.impl.CustomerService;
+import Dao.impl.CustomerDAO;
 import model.CustomerModel;
 import model.MovieModel;
 import utility.SetTable;
@@ -21,7 +21,6 @@ public abstract class EventCustomer {
     private JTable table = new JTable();
     SetTable<MovieModel> setTable = SetTable.getInstance();
 
-    CustomerService customerService = new CustomerService();
 
     private void eventTable(JTable table,JPanel jpnView, JTextField jtfSearch,JButton btnRemove) {
         table.addMouseListener(new MouseAdapter() {
@@ -81,7 +80,7 @@ public abstract class EventCustomer {
                     if (customerModel.getMaKH() == null)
                         JOptionPane.showMessageDialog(null, "Kích chuột vào 1 dòng của table để xóa !!", "Thông báo", JOptionPane.ERROR_MESSAGE);
                     else {
-                        customerService.delete(customerModel);
+                        CustomerDAO.getInstance().delete(customerModel);
                         loadTable(jpnView,jtfSearch,btnRemove);
                     }
                 }
@@ -108,7 +107,7 @@ public abstract class EventCustomer {
         jpnView.removeAll();
         jpnView.validate();
         jpnView.repaint();
-        List<CustomerModel> listItem = customerService.selectAll();
+        List<CustomerModel> listItem = CustomerDAO.getInstance().selectAll();
         MouseListener[] listeners = btnRemove.getMouseListeners();
         for (MouseListener listener : listeners) {
             btnRemove.removeMouseListener(listener);
