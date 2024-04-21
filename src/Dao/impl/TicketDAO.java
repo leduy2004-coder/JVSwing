@@ -2,7 +2,6 @@ package Dao.impl;
 
 import Dao.DAOInterface;
 import Dao.SQLSEVERDataAccess;
-import Service.impl.MovieService;
 import model.MovieModel;
 import model.TicketModel;
 
@@ -13,7 +12,6 @@ import java.util.List;
 
 public class TicketDAO implements DAOInterface<TicketModel> {
     SQLSEVERDataAccess con = new SQLSEVERDataAccess();
-    MovieService movieService = new MovieService();
     public static TicketDAO getInstance() {
         return new TicketDAO();
     }
@@ -62,7 +60,7 @@ public class TicketDAO implements DAOInterface<TicketModel> {
                 try {
                     MovieModel movie = new MovieModel();
                     movie.setMaPhim(rs.getString("maPhim"));
-                    ticketModel.setMovieModel(movieService.selectById(movie));
+                    ticketModel.setMovieModel(MovieDAO.getInstance().selectById(movie));
                 }catch (Exception ex) {
                     ex.printStackTrace();
                 }

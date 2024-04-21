@@ -2,18 +2,22 @@ package Dao.impl;
 
 import Dao.DAOInterface;
 import Dao.SQLSEVERDataAccess;
-import Service.impl.TypeMovieService;
 import model.MovieModel;
 import model.TypeMovieModel;
 
-import java.sql.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class MovieDAO implements DAOInterface<MovieModel> {
     SQLSEVERDataAccess con = new SQLSEVERDataAccess();
-    TypeMovieService typeMovieService = new TypeMovieService();
+
     public static MovieDAO getInstance() {
         return new MovieDAO();
     }
@@ -21,20 +25,35 @@ public class MovieDAO implements DAOInterface<MovieModel> {
 
     @Override
     public int insert(MovieModel m) {
-        String sql = "INSERT INTO Phim (maLPhim, tenPhim, daoDien, doTuoiYeuCau, ngayKhoiChieu, thoiLuong, tinhTrang, hinhDaiDien, video,moTa) VALUES (?,?,?,?,?,?,?,?,?,?)";
-        int k = con.ExecuteUpdateSQL(sql,m.getTypeMovieModel().getMaLPhim(),m.getTenPhim(),m.getDaoDien(),m.getDoTuoi(),
-                                    (Date) m.getNgayKhoiChieu(),m.getThoiLuong(),m.isTinhTrang(),m.getHinhDaiDien(),m.getVideo(),m.getMoTa());
-        return k;
+        try {
+            InputStream is = new FileInputStream(new File(m.getS()));
+            String sql = "INSERT INTO Phim (maLPhim, tenPhim, daoDien, doTuoiYeuCau, ngayKhoiChieu, thoiLuong, tinhTrang, hinhDaiDien, video,moTa) VALUES (?,?,?,?,?,?,?,?,?,?)";
+            int k = con.ExecuteUpdateSQL(sql,m.getTypeMovieModel().getMaLPhim(),m.getTenPhim(),m.getDaoDien(),m.getDoTuoi(),
+                    (Date) m.getNgayKhoiChieu(),m.getThoiLuong(),m.isTinhTrang(),is,m.getVideo(),m.getMoTa());
+            return k;
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public int update(MovieModel m) {
-        StringBuilder sql = new StringBuilder("UPDATE Phim SET ");
-        sql.append("maLPhim = ?, tenPhim = ?, daoDien = ?, doTuoiYeuCau = ?, ngayKhoiChieu = ?, thoiLuong = ?, tinhTrang = ?, hinhDaiDien = ?, video = ?,moTa = ?");
-        sql.append(" Where maPhim = ?");
-        int k = con.ExecuteUpdateSQL(sql.toString(),m.getTypeMovieModel().getMaLPhim(),m.getTenPhim(),m.getDaoDien(),m.getDoTuoi(),
-                                    (Date) m.getNgayKhoiChieu(),m.getThoiLuong(),m.isTinhTrang(),m.getHinhDaiDien(),m.getVideo(),m.getMoTa(),m.getMaPhim());
+        try {
+            int k;
+            StringBuilder sql = new StringBuilder("UPDATE Phim SET ");
+            sql.append("maLPhim = ?, tenPhim = ?, daoDien = ?, doTuoiYeuCau = ?, ngayKhoiChieu = ?, thoiLuong = ?, tinhTrang = ?, hinhDaiDien = ?, video = ?,moTa = ?");
+            sql.append(" Where maPhim = ?");
+            if(m.getS()!=null){
+                InputStream is = new FileInputStream(new File(m.getS()));
+                k = con.ExecuteUpdateSQL(sql.toString(),m.getTypeMovieModel().getMaLPhim(),m.getTenPhim(),m.getDaoDien(),m.getDoTuoi(),
+                        (Date) m.getNgayKhoiChieu(),m.getThoiLuong(),m.isTinhTrang(),is,m.getVideo(),m.getMoTa(),m.getMaPhim());
+            }else
+                k = con.ExecuteUpdateSQL(sql.toString(),m.getTypeMovieModel().getMaLPhim(),m.getTenPhim(),m.getDaoDien(),m.getDoTuoi(),
+                        (Date) m.getNgayKhoiChieu(),m.getThoiLuong(),m.isTinhTrang(),m.getImg(),m.getVideo(),m.getMoTa(),m.getMaPhim());
         return k;
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -60,13 +79,13 @@ public class MovieDAO implements DAOInterface<MovieModel> {
                 movieModel.setNgayKhoiChieu(rs.getDate("ngayKhoiChieu"));
                 movieModel.setThoiLuong(rs.getInt("thoiLuong"));
                 movieModel.setTinhTrang(rs.getBoolean("tinhTrang"));
-                movieModel.setHinhDaiDien(rs.getString("hinhDaiDien"));
+                movieModel.setImg(rs.getBytes("hinhDaiDien"));
                 movieModel.setVideo(rs.getString("video"));
                 movieModel.setMoTa(rs.getString("moTa"));
                 try {
                     TypeMovieModel type = new TypeMovieModel();
                     type.setMaLPhim(rs.getString("maLPhim"));
-                    movieModel.setTypeMovieModel(typeMovieService.selectById(type));
+                    movieModel.setTypeMovieModel(TypeMovieDAO.getInstance().selectById(type));
                 }catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -94,13 +113,13 @@ public class MovieDAO implements DAOInterface<MovieModel> {
                 movieModel.setNgayKhoiChieu(rs.getDate("ngayKhoiChieu"));
                 movieModel.setThoiLuong(rs.getInt("thoiLuong"));
                 movieModel.setTinhTrang(rs.getBoolean("tinhTrang"));
-                movieModel.setHinhDaiDien(rs.getString("hinhDaiDien"));
+                movieModel.setImg(rs.getBytes("hinhDaiDien"));
                 movieModel.setVideo(rs.getString("video"));
                 movieModel.setMoTa(rs.getString("moTa"));
                 try {
                     TypeMovieModel type = new TypeMovieModel();
                     type.setMaLPhim(rs.getString("maLPhim"));
-                    movieModel.setTypeMovieModel(typeMovieService.selectById(type));
+                    movieModel.setTypeMovieModel(TypeMovieDAO.getInstance().selectById(type));
                 }catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -127,13 +146,13 @@ public class MovieDAO implements DAOInterface<MovieModel> {
                 movieModel.setNgayKhoiChieu(rs.getDate("ngayKhoiChieu"));
                 movieModel.setThoiLuong(rs.getInt("thoiLuong"));
                 movieModel.setTinhTrang(rs.getBoolean("tinhTrang"));
-                movieModel.setHinhDaiDien(rs.getString("hinhDaiDien"));
+                movieModel.setImg(rs.getBytes("hinhDaiDien"));
                 movieModel.setVideo(rs.getString("video"));
                 movieModel.setMoTa(rs.getString("moTa"));
                 try {
                     TypeMovieModel type = new TypeMovieModel();
                     type.setMaLPhim(rs.getString("maLPhim"));
-                    movieModel.setTypeMovieModel(typeMovieService.selectById(type));
+                    movieModel.setTypeMovieModel(TypeMovieDAO.getInstance().selectById(type));
                 }catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -145,93 +164,4 @@ public class MovieDAO implements DAOInterface<MovieModel> {
 
         return ketQua;
     }
-    //    @Override
-//    public String insert(MovieModel t) {
-//        String ketQua = null;
-//        try {
-//            Connection con = JDBCUtil.getConnection();
-//            String sql = "INSERT INTO Phim (maLPhim, tenPhim, daoDien, doTuoiYeuCau, ngayKhoiChieu, thoiLuong, tinhTrang, hinhDaiDien, video,moTa) VALUES (?,?,?,?,?,?,?,?,?,?)";
-//            PreparedStatement pst = con.prepareStatement(sql,PreparedStatement.RETURN_GENERATED_KEYS);
-//            pst.setString(1, t.getTypeMovieModel().getMaLPhim());
-//            pst.setString(2, t.getTenPhim());
-//            pst.setString(3, t.getDaoDien());
-//            pst.setInt(4, t.getDoTuoi());
-//            pst.setDate(5,(Date) t.getNgayKhoiChieu());
-//            pst.setInt(6, t.getThoiLuong());
-//            pst.setBoolean(7, t.isTinhTrang());
-//            pst.setString(8, t.getHinhDaiDien());
-//            pst.setString(9, t.getVideo());
-//            pst.setString(10, t.getMoTa());
-//
-//            pst.execute();
-//            ResultSet rs = pst.getGeneratedKeys();
-//            while (rs.next()) {
-//                    ketQua = rs.getString(1);
-//            }
-//            JDBCUtil.closeConnection(con);
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//        return ketQua;
-//    }
-//
-//    @Override
-//    public String update(MovieModel t) {
-//        String ketQua = null;
-//        try {
-//            Connection con = JDBCUtil.getConnection();
-//            StringBuilder sql = new StringBuilder("UPDATE Phim SET ");
-//            sql.append("maLPhim = ?, tenPhim = ?, daoDien = ?, doTuoiYeuCau = ?, ngayKhoiChieu = ?, thoiLuong = ?, tinhTrang = ?, hinhDaiDien = ?, video = ?,moTa = ?");
-//            sql.append(" Where maPhim = ?");
-//            PreparedStatement pst = con.prepareStatement(sql.toString(),PreparedStatement.RETURN_GENERATED_KEYS);
-//            pst.setString(1, t.getTypeMovieModel().getMaLPhim());
-//            pst.setString(2, t.getTenPhim());
-//            pst.setString(3, t.getDaoDien());
-//            pst.setInt(4, t.getDoTuoi());
-//            pst.setDate(5,(Date) t.getNgayKhoiChieu());
-//            pst.setInt(6, t.getThoiLuong());
-//            pst.setBoolean(7, t.isTinhTrang());
-//            pst.setString(8, t.getHinhDaiDien());
-//            pst.setString(9, t.getVideo());
-//            pst.setString(10, t.getMoTa());
-//            pst.setString(11, t.getMaPhim());
-//
-//            int affectedRows = pst.executeUpdate();
-//            if (affectedRows > 0) {
-//                ResultSet rs = pst.getGeneratedKeys();
-//                while (rs.next()) {
-//                    ketQua = rs.getString(1);
-//                }
-//            }
-//            JDBCUtil.closeConnection(con);
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//        return ketQua;
-//    }
-//
-//    @Override
-//    public String delete(MovieModel t) {
-//        String ketQua = null;
-//        try {
-//            Connection con = JDBCUtil.getConnection();
-//
-//            String sql = "DELETE from Phim Where maPhim = ?";
-//            PreparedStatement pst = con.prepareStatement(sql,PreparedStatement.RETURN_GENERATED_KEYS);
-//            pst.setString(1,t.getMaPhim());
-//            int affectedRows = pst.executeUpdate();
-//            if (affectedRows > 0) {
-//                ResultSet rs = pst.getGeneratedKeys();
-//                while (rs.next()) {
-//                    ketQua = rs.getString(1);
-//                }
-//            }
-//            JDBCUtil.closeConnection(con);
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//        return ketQua;
-//    }
 }

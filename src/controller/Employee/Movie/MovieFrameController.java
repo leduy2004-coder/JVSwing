@@ -1,30 +1,31 @@
 package controller.Employee.Movie;
 
-import Service.impl.MovieService;
-import Service.impl.TypeMovieService;
+import Dao.impl.MovieDAO;
+import Dao.impl.TypeMovieDAO;
 import model.MovieModel;
 import model.TypeMovieModel;
 import view.Employee.MoviePanel.MovieJFrame;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
 public class MovieFrameController extends EventMovie{
     private MovieJFrame movie;
-    private MovieService movieService;
     private MovieModel movieModel;
     private String msg;
     private JPanel jpnView;
     private JTable table;
     private JTextField jtfSearch;
     private JButton btnRemove;
-    TypeMovieService typeMovieService = new TypeMovieService();
 
+    String s;
     int t=0;
 
     public MovieFrameController( MovieJFrame movie,JPanel jpnView, JTextField jtfSearch,JButton btnRemove) {
@@ -32,7 +33,6 @@ public class MovieFrameController extends EventMovie{
         this.jpnView = jpnView;
         this.jtfSearch = jtfSearch;
         this.btnRemove = btnRemove;
-        movieService = new MovieService();
     }
 
     public void setView(MovieModel movieModel) {
@@ -41,7 +41,7 @@ public class MovieFrameController extends EventMovie{
         movie.jlbId.setText("Mã: "+movieModel.getMaPhim());
         movie.jtfName.setText(movieModel.getTenPhim());
         movie.jdcDate.setDate(movieModel.getNgayKhoiChieu());
-        for (TypeMovieModel type : typeMovieService.selectAll()){
+        for (TypeMovieModel type : TypeMovieDAO.getInstance().selectAll()){
             movie.jbxType.addItem(type);
         }
         for (int i = 1; i < movie.jbxType.getItemCount(); i++) {
@@ -49,18 +49,24 @@ public class MovieFrameController extends EventMovie{
             if (item.toString().equalsIgnoreCase(movieModel.getTypeMovieModel().getTenLPhim()))
                 movie.jbxType.setSelectedIndex(i);
         }
+        if(movieModel.getImg()!=null){
+            ImageIcon imageIcon = new ImageIcon(movieModel.getImg());
+            Image im = imageIcon.getImage();
+            Image myImg = im.getScaledInstance(movie.lbImage.getWidth(), movie.lbImage.getHeight(),Image.SCALE_SMOOTH);
+            ImageIcon newImage = new ImageIcon(myImg);
+            movie.lbImage.setIcon(newImage);
+        }
         movie.jtfDirector.setText(movieModel.getDaoDien());
         movie.jtfYear.setText(String.valueOf(movieModel.getDoTuoi()));
         movie.jtfDura.setText(String.valueOf(movieModel.getThoiLuong()));
         movie.jtaDes.setText(movieModel.getMoTa());
         movie.jtaVideo.setText(movieModel.getVideo());
-        movie.jtfThumbnail.setText(movieModel.getHinhDaiDien());
         movie.jcbStatus.setSelected(movieModel.isTinhTrang());
         CreateOrUpdate();
     }
     public void CreateOrUpdate() {
         if(t==0)
-            for (TypeMovieModel type : typeMovieService.selectAll()){
+            for (TypeMovieModel type : TypeMovieDAO.getInstance().selectAll()){
                 movie.jbxType.addItem(type);
             }
         movie.btnSave.addMouseListener(new MouseAdapter() {
@@ -83,7 +89,7 @@ public class MovieFrameController extends EventMovie{
                         movieModel.setThoiLuong(Integer.parseInt(movie.jtfDura.getText().trim()));
                         movieModel.setDaoDien(movie.jtfDirector.getText().trim());
                         movieModel.setTinhTrang(movie.jcbStatus.isSelected());
-                        movieModel.setHinhDaiDien(movie.jtfThumbnail.getText().trim());
+                        movieModel.setS(s);
                         movieModel.setTenPhim(movie.jtfName.getText().trim());
                         movieModel.setMoTa(movie.jtaDes.getText().trim());
                         movieModel.setNgayKhoiChieu(covertDateToDateSql(movie.jdcDate.getDate()));
@@ -91,14 +97,14 @@ public class MovieFrameController extends EventMovie{
                         if(movieModel.getMaPhim() == null){
                             msg = "Bạn muốn thêm dữ liệu không ?";
                             if(showDialog(msg)){
-                                movieService.save(movieModel);
+                                MovieDAO.getInstance().insert(movieModel);
                                 movie.dispose();
                                 loadTable(jpnView,jtfSearch,btnRemove);
                             }
                         }else {
                             msg = "Bạn muốn cập nhật dữ liệu không ?";
                             if(showDialog(msg)){
-                                movieService.update(movieModel);
+                                MovieDAO.getInstance().update(movieModel);
                                 movie.dispose();
                                 loadTable(jpnView,jtfSearch,btnRemove);
                             }
@@ -108,6 +114,8 @@ public class MovieFrameController extends EventMovie{
                         JOptionPane.showMessageDialog(null,msg,"Thông báo",JOptionPane.ERROR_MESSAGE);
                 }
             }
+
+
 
 
             @Override
@@ -120,7 +128,35 @@ public class MovieFrameController extends EventMovie{
                 movie.btnSave.setBackground(new Color(0, 153, 51));
             }
         });
+
+        movie.btnImage.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+                FileNameExtensionFilter filter = new FileNameExtensionFilter("*.IMAGE", "jpg","gif","png");
+                fileChooser.addChoosableFileFilter(filter);
+                int result = fileChooser.showSaveDialog(null);
+                if(result == JFileChooser.APPROVE_OPTION){
+                    File selectedFile = fileChooser.getSelectedFile();
+                    String path = selectedFile.getAbsolutePath();
+                    System.out.println(path);
+                    movie.lbImage.setIcon(ResizeImage(path));
+                    s = path;
+                }
+                else if(result == JFileChooser.CANCEL_OPTION){
+                    System.out.println("No Data");
+                }
+            }
+        });
         exit();
+    }
+    public ImageIcon ResizeImage(String imgPath){
+        ImageIcon MyImage = new ImageIcon(imgPath);
+        Image img = MyImage.getImage();
+        Image newImage = img.getScaledInstance(movie.lbImage.getWidth(), movie.lbImage.getHeight(),Image.SCALE_SMOOTH);
+        ImageIcon image = new ImageIcon(newImage);
+        return image;
     }
     private boolean showDialog(String msg) {
         int dialogResult = JOptionPane.showConfirmDialog(null,

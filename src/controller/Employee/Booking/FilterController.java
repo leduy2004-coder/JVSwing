@@ -1,6 +1,5 @@
 package controller.Employee.Booking;
-
-import Service.impl.BookingService;
+import Dao.impl.BookingDAO;
 import bean.FilterBean;
 import model.MovieModel;
 import utility.SetTable;
@@ -16,14 +15,12 @@ public class FilterController {
     private FilterFrame filter;
     public final String[] COLUMNS = {"Họ tên","Tên phim", "Ngày mua", "Phòng","Ca", "Ghế"};
     String[] methodNames = {"getHoTen", "getTenPhim", "getNgayMua","getMaPhong","getTenCa","getMaGhe"};
-    private BookingService bookingService;
     private List<FilterBean> list;
     SetTable<MovieModel> setTable = SetTable.getInstance();
     String msg;
     int c;
     public FilterController(FilterFrame filter) {
         this.filter = filter;
-        bookingService = new BookingService();
         list = new ArrayList<>();
         c=0;
     }
@@ -38,7 +35,7 @@ public class FilterController {
                     if(!kiemTraChuoi(filter.jtfPhone.getText()))
                         msg = "Số điện thoại phải là 10 số !!";
                     else{
-                        list = bookingService.selectByPhone(filter.jtfPhone.getText());
+                        list = BookingDAO.getInstance().selectByPhone(filter.jtfPhone.getText());
                         if(list.size()>0){
                             setTable.setDataToTable(filter.pnTable,COLUMNS,list,filter.jtfSearch,methodNames);
                             c++;

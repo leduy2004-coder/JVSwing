@@ -1,13 +1,9 @@
 package controller.Employee.Schedule.Frame;
 
-import Service.impl.ScheduleService;
 import com.toedter.calendar.JDateChooser;
-import model.MovieModel;
 import model.ShiftModel;
 import utility.ShiftRadioModel;
-import view.Employee.MoviePanel.MovieJFrame;
 import view.Employee.SchedulePanel.Frame.MovieFrame;
-import view.Employee.SchedulePanel.Frame.ShiftsFrame;
 
 import javax.swing.*;
 import java.awt.*;

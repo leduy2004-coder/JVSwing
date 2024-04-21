@@ -93,11 +93,7 @@ public class TicketPanel extends JPanel {
 		lblNewLabel_2.setPreferredSize(new Dimension(51, 50));
 		lblNewLabel_2.setFont(new Font("Arial", Font.ITALIC, 14));
 		panel_3.add(lblNewLabel_2);
-		
-		JLabel lblNewLabel_3 = new JLabel("     Cập nhật:   Kích đúp chuột vào 1 dòng trong table ");
-		lblNewLabel_3.setForeground(new Color(255, 0, 0));
-		lblNewLabel_3.setFont(new Font("Arial", Font.ITALIC, 14));
-		panel_3.add(lblNewLabel_3, BorderLayout.NORTH);
+
 
 		TicketController ticketController = new TicketController(panel_table,btnNewButton,btnNewButton_1,textField);
 		ticketController.displayView();

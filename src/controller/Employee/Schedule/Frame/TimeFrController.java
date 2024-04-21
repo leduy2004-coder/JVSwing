@@ -1,6 +1,6 @@
 package controller.Employee.Schedule.Frame;
 
-import Service.impl.ScheduleService;
+import Dao.impl.ScheduleDAO;
 import com.toedter.calendar.JDateChooser;
 import model.ShiftModel;
 import view.Employee.SchedulePanel.Frame.ShiftsFrame;
@@ -17,7 +17,6 @@ public class TimeFrController {
     private JButton btnNext;
     private JButton btnRemove;
     private JDateChooser jdcDate;
-    ScheduleService scheduleService = new ScheduleService();
 
     public TimeFrController(Frame frame,JButton btnNext, JButton btnRemove,JDateChooser jdcDate) {
         this.frame = frame;
@@ -31,7 +30,7 @@ public class TimeFrController {
             public void mouseClicked(MouseEvent e) {
                 List<ShiftModel> list = null;
                 if(jdcDate.getDate()!=null){
-                    list = scheduleService.selectAllShift(covertDateToDateSql(jdcDate.getDate()));
+                    list = ScheduleDAO.getInstance().selectAllShift(covertDateToDateSql(jdcDate.getDate()));
                     if(list.size()>0){
                         frame.dispose();
                         ShiftsFrame shiftsFrame = new ShiftsFrame(list,jdcDate);

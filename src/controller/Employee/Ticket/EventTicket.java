@@ -1,6 +1,6 @@
 package controller.Employee.Ticket;
 
-import Service.impl.TicketService;
+import Dao.impl.TicketDAO;
 import model.MovieModel;
 import model.TicketModel;
 import utility.SetTable;
@@ -18,7 +18,6 @@ public abstract class EventTicket {
     String[] methodNames = {"getMaVe", "getTenPhim", "getSoLuongToiDa","getSoLuongDaDat","getTien","getMaNV","isTinhTrang"};
     SetTable<MovieModel> setTable = SetTable.getInstance();
     private JTable table = new JTable();
-     TicketService ticketService = new TicketService();
 
     public void remove(JTable table,JButton btnRemove,JPanel jpnView, JTextField jtfSearch) {
         TicketModel ticketModel = new TicketModel();
@@ -43,7 +42,7 @@ public abstract class EventTicket {
                     if (ticketModel.getMaVe() == null)
                         JOptionPane.showMessageDialog(null, "Kích chuột vào 1 dòng của table để xóa !!", "Thông báo", JOptionPane.ERROR_MESSAGE);
                     else{
-                        ticketService.delete(ticketModel);
+                        TicketDAO.getInstance().delete(ticketModel);
                         loadTable(jpnView,jtfSearch,btnRemove);
                     }
                 }
@@ -71,7 +70,7 @@ public abstract class EventTicket {
         jpnView.removeAll();
         jpnView.validate();
         jpnView.repaint();
-        List<TicketModel> listItem = ticketService.selectAll();
+        List<TicketModel> listItem = TicketDAO.getInstance().selectAll();
         MouseListener[] listeners = btnRemove.getMouseListeners();
         for (MouseListener listener : listeners) {
             btnRemove.removeMouseListener(listener);

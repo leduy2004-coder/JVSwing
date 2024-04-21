@@ -1,6 +1,6 @@
 package controller.Manage.Statistic;
 
-import Service.impl.StatisticService;
+import Dao.impl.StatisticDAO;
 import bean.ChartStatisticBean;
 import bean.DataStatisticBean;
 import bean.TableStatisticBean;
@@ -22,7 +22,6 @@ import java.util.List;
 
 public class StatisticController {
     private StatisticPanel statistic;
-    StatisticService statisticService = new StatisticService();
     ChartStatisticBean chart;
     DataStatisticBean data;
 
@@ -44,14 +43,14 @@ public class StatisticController {
     }
 
     public void setData(){
-        data = statisticService.getData();
+        data = StatisticDAO.getInstance().getData();
         statistic.jlbTotalMovie.setText(String.valueOf(data.getTotalMovie()));
         statistic.jlbTotalCus.setText(String.valueOf(data.getTotalCustomer()));
         statistic.jlbTotalEmpl.setText(String.valueOf(data.getTotalEmployee()));
     }
     public void setChart(){
         List<ChartStatisticBean> list;
-        list = statisticService.getAllYear();
+        list = StatisticDAO.getInstance().getAllYear();
         for (ChartStatisticBean chart:list) {
             statistic.jcbYear.addItem(chart.getYear());
         }
@@ -63,7 +62,7 @@ public class StatisticController {
                 statistic.jpnChart.repaint();
                 if(statistic.jcbYear != null && !(String.valueOf(statistic.jcbYear.getItemAt(statistic.jcbYear.getSelectedIndex()))).equals("")){
                     List<ChartStatisticBean> charts;
-                    charts = statisticService.getChart((int)statistic.jcbYear.getItemAt(statistic.jcbYear.getSelectedIndex()));
+                    charts = StatisticDAO.getInstance().getChart((int)statistic.jcbYear.getItemAt(statistic.jcbYear.getSelectedIndex()));
                     DefaultCategoryDataset dataset = new DefaultCategoryDataset();
                     if (charts.size()>0) {
                         for (ChartStatisticBean item : charts) {
@@ -107,7 +106,7 @@ public class StatisticController {
                 statistic.jpnTable.repaint();
                 if(statistic.jdcBegin.getDate()!=null&&statistic.jdcEnd.getDate()!=null){
                     if((statistic.jdcBegin.getDate()).compareTo(statistic.jdcEnd.getDate())<=0) {
-                        List<TableStatisticBean> listItem = statisticService.getTable(covertDateToDateSql(statistic.jdcBegin.getDate()),covertDateToDateSql(statistic.jdcEnd.getDate()));
+                        List<TableStatisticBean> listItem = StatisticDAO.getInstance().getTable(covertDateToDateSql(statistic.jdcBegin.getDate()),covertDateToDateSql(statistic.jdcEnd.getDate()));
                         if(listItem.size()>0){
                             setTable.setDataToTable(statistic.jpnTable,COLUMNS,listItem,statistic.jtfSearch,methodNames);
                         }

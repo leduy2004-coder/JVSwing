@@ -1,9 +1,10 @@
 package Dao.impl;
 
 import Dao.SQLSEVERDataAccess;
-import Service.impl.ScheduleService;
 import bean.FilterBean;
-import model.*;
+import model.BookChairModel;
+import model.BookTicketModel;
+import model.ScheduleModel;
 
 import java.sql.Date;
 import java.sql.ResultSet;
@@ -13,7 +14,6 @@ import java.util.List;
 
 public class BookingDAO {
     SQLSEVERDataAccess con = new SQLSEVERDataAccess();
-    ScheduleService scheduleService = new ScheduleService();
 
     public static BookingDAO getInstance() {
         return new BookingDAO();
@@ -72,9 +72,9 @@ public class BookingDAO {
                 ScheduleModel scheduleModel = new ScheduleModel();
                 scheduleModel.setMaCa(rs.getString("maCa"));
                 scheduleModel.setMaPhim(rs.getString("maPhim"));
-                filterBean.setTenCa(scheduleService.selectByMCa(scheduleModel).getTenCa());
+                filterBean.setTenCa(ScheduleDAO.getInstance().selectByMCa(scheduleModel).getTenCa());
                 filterBean.setHoTen(rs.getString("hoTen"));
-                filterBean.setTenPhim(scheduleService.selectByMPhim(scheduleModel).getTenPhim());
+                filterBean.setTenPhim(ScheduleDAO.getInstance().selectByMPhim(scheduleModel).getTenPhim());
                 filterBean.setMaPhong(rs.getString("maPhong"));
                 filterBean.setNgayMua(rs.getDate("ngayMua"));
                 filterBean.setMaGhe(rs.getString("maGhe"));

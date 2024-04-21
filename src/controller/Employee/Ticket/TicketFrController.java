@@ -1,8 +1,7 @@
 package controller.Employee.Ticket;
 
-import Service.impl.MovieService;
-import Service.impl.TicketService;
-import Service.impl.TypeMovieService;
+import Dao.impl.MovieDAO;
+import Dao.impl.TicketDAO;
 import model.MovieModel;
 import model.TicketModel;
 import utility.SessionUtil;
@@ -13,14 +12,11 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.List;
 
 public class TicketFrController extends EventTicket{
     private TicketFrame ticket;
-    private TicketService ticketService;
     private MovieModel movieModel;
-    MovieService movieService = new MovieService();
     SetTable<MovieModel> setTable = SetTable.getInstance();
 
     private final String[] COLUMNS = {"Mã Phim","Tên phim"};
@@ -31,7 +27,6 @@ public class TicketFrController extends EventTicket{
     private JTable table = new JTable();
     private JTextField jtfSearch;
     private JButton btnRemove;
-    TypeMovieService typeMovieService = new TypeMovieService();
     int t=0;
 
     public TicketFrController(TicketFrame ticketFrame,JPanel jpnView, JTextField jtfSearch, JButton btnRemove) {
@@ -39,12 +34,11 @@ public class TicketFrController extends EventTicket{
         this.jpnView = jpnView;
         this.jtfSearch = jtfSearch;
         this.btnRemove = btnRemove;
-        ticketService = new TicketService();
     }
 
     public void CreateOrUpdate(){
         JTable table1 = new JTable();
-        List<MovieModel> listItem = movieService.selectAll();
+        List<MovieModel> listItem = MovieDAO.getInstance().selectAll();
         table1 = setTable.setDataToTable(ticket.panelTable,COLUMNS,listItem,ticket.search,METHOD);
 
         ticket.lbIdEmploy.setText(SessionUtil.getInstance().getValueEmpl().getHoTen());
@@ -71,7 +65,7 @@ public class TicketFrController extends EventTicket{
                             ticketModel.setMovieModel(finalMovie);
                             msg= "Bạn muốn thêm dữ liệu không ?";
                             if(showDialog(msg)){
-                                ticketService.save(ticketModel);
+                                TicketDAO.getInstance().insert(ticketModel);
                                 ticket.dispose();
                                 loadTable(jpnView,jtfSearch,btnRemove);
                             }

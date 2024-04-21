@@ -7,6 +7,9 @@ import java.sql.ResultSet;
 
 public class ManageDAO {
     SQLSEVERDataAccess con = new SQLSEVERDataAccess();
+    public static ManageDAO getInstance() {
+        return new ManageDAO();
+    }
     public ManageModel selectByUserNameAndPassword(String userName, String password) {
         ManageModel result = null;
         try {
