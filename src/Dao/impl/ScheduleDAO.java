@@ -160,9 +160,6 @@ public class ScheduleDAO implements DAOInterface<ScheduleModel> {
         List<RoomModel> ketQua = new ArrayList<RoomModel>();
         try {
             String sql = "select * from fPhongChuaChieu(?,?)";
-//            PreparedStatement pstmt = con.prepareStatement(sql);
-//            pstmt.setDate(1, date);
-//            pstmt.setString(2, shiftModel.getMaCa());
             ResultSet rs = con.getResultSet(sql,date,shiftModel.getMaCa());
             RoomModel room = null;
             while (rs.next()) {
@@ -175,81 +172,5 @@ public class ScheduleDAO implements DAOInterface<ScheduleModel> {
         }
         return ketQua;
     }
-
-//    @Override
-//    public String insert(ScheduleModel t) {
-//        String ketQua = null;
-//        try {
-//            Connection con = JDBCUtil.getConnection();
-//            String sql = "INSERT INTO SuatChieu (maPhim, maPhong, maCa, ngayChieu) VALUES (?,?,?,?)";
-//            PreparedStatement pst = con.prepareStatement(sql,PreparedStatement.RETURN_GENERATED_KEYS);
-//            pst.setString(1, t.getMaPhim());
-//            pst.setString(2, t.getMaPhong());
-//            pst.setString(3, t.getMaCa());
-//            pst.setDate(4, (Date) t.getNgayChieu());
-//            pst.execute();
-//            ResultSet rs = pst.getGeneratedKeys();
-//            while (rs.next()) {
-//                ketQua = rs.getString(1);
-//            }
-//            JDBCUtil.closeConnection(con);
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//        return ketQua;
-//    }
-//
-//    @Override
-//    public String update(ScheduleModel t) {
-//        String ketQua = null;
-//        try {
-//            Connection con = JDBCUtil.getConnection();
-//            String sql = "UPDATE SuatChieu SET maPhim = ?, maPhong = ?, maCa = ?, ngayChieu = ? WHERE maSuat = ?";
-//            PreparedStatement pst = con.prepareStatement(sql,PreparedStatement.RETURN_GENERATED_KEYS);
-//            pst.setString(1, t.getMaPhim());
-//            pst.setString(2, t.getMaPhong());
-//            pst.setString(3, t.getMaCa());
-//            pst.setDate(4, (Date) t.getNgayChieu());
-//            pst.setString(5,t.getMaSC());
-//
-//            int affectedRows = pst.executeUpdate();
-//            if (affectedRows > 0) {
-//                ResultSet rs = pst.getGeneratedKeys();
-//                while (rs.next()) {
-//                    ketQua = rs.getString(1);
-//                }
-//            }
-//            JDBCUtil.closeConnection(con);
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//        return ketQua;
-//    }
-//
-//    @Override
-//    public String delete(ScheduleModel t) {
-//        String ketQua = null;
-//        try {
-//            Connection con = JDBCUtil.getConnection();
-//
-//            String sql = "DELETE from SuatChieu Where maSuat = ?";
-//            PreparedStatement pst = con.prepareStatement(sql,PreparedStatement.RETURN_GENERATED_KEYS);
-//            pst.setString(1,t.getMaSC());
-//            int affectedRows = pst.executeUpdate();
-//            if (affectedRows > 0) {
-//                ResultSet rs = pst.getGeneratedKeys();
-//                while (rs.next()) {
-//                    ketQua = rs.getString(1);
-//                }
-//            }
-//            JDBCUtil.closeConnection(con);
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//        return ketQua;
-//    }
-
 
 }
