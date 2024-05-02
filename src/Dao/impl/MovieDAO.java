@@ -32,6 +32,7 @@ public class MovieDAO implements DAOInterface<MovieModel> {
                     (Date) m.getNgayKhoiChieu(),m.getThoiLuong(),m.isTinhTrang(),is,m.getVideo(),m.getMoTa());
             return k;
         } catch (FileNotFoundException e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
@@ -97,7 +98,23 @@ public class MovieDAO implements DAOInterface<MovieModel> {
         return result;
     }
 
-
+    public List<MovieModel> selectMovieUnShow() {
+        List<MovieModel> result = new ArrayList<MovieModel>();
+        try {
+            String sql = "SELECT maPhim,tenPhim FROM Phim where maPhim not in (select maPhim from Ve)";
+            ResultSet rs = con.getResultSet(sql);
+            MovieModel movieModel = null;
+            while (rs.next()) {
+                movieModel = new MovieModel();
+                movieModel.setMaPhim(rs.getString("maPhim"));
+                movieModel.setTenPhim(rs.getString("tenPhim"));
+                result.add(movieModel);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return result;
+    }
     public MovieModel selectById(MovieModel m) {
         List<MovieModel> result = new ArrayList<MovieModel>();
         try {
