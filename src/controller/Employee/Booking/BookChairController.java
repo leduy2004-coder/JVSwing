@@ -1,9 +1,11 @@
 package controller.Employee.Booking;
 
 import Dao.impl.BookingDAO;
+import Dao.impl.TicketDAO;
 import bean.BookBean;
 import model.BookChairModel;
 import model.ScheduleModel;
+import model.TicketModel;
 import view.Employee.BookingPanel.BookingChair;
 import view.Employee.BookingPanel.BookingFrame;
 
@@ -34,8 +36,8 @@ public class BookChairController {
     }
 
     public void setChair(){
+        float TicketMoney = TicketDAO.getInstance().selectByMPhim(sche.getMaPhim()).getTien();
         listChairBook = BookingDAO.getInstance().selectChair(sche.getMaSC());
-        System.out.println(sche.getMaSC());
         t = 0;
         money = 0;
         chairBook = "";
@@ -69,7 +71,7 @@ public class BookChairController {
                         model.setMaGhe(bookBean.getLbNameChair().getText());
                         listChair.add(model);
 
-                        money += 60000;
+                        money += TicketMoney;
                         book.lbMoney.setText(String.valueOf(money));
                         RemoveEvent(bookBean);
                         bookBean.getLbChair().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));

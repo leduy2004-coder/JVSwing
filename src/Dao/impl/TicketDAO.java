@@ -71,5 +71,26 @@ public class TicketDAO implements DAOInterface<TicketModel> {
         }
         return result;
     }
+    public TicketModel selectByMPhim(String maPhim) {
+        TicketModel result = new TicketModel();
+        try {
+            String sql = "SELECT * FROM Ve where maPhim =?";
+            ResultSet rs = con.getResultSet(sql,maPhim);
+
+            while (rs.next()) {
+                TicketModel ticketModel = new TicketModel();
+                ticketModel.setMaNV(rs.getString("maNV"));
+                ticketModel.setMaVe(rs.getString("maVe"));
+                ticketModel.setTien(rs.getFloat("tien"));
+                ticketModel.setSoLuongDaDat(rs.getInt("soLuongDaBan"));
+                ticketModel.setSoLuongToiDa(rs.getInt("soLuongToiDa"));
+                ticketModel.setTinhTrang(rs.getBoolean("tinhTrang"));
+                result= (ticketModel);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return result;
+    }
 
 }

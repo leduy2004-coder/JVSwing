@@ -2,14 +2,17 @@ package controller.Employee.Ticket;
 
 import Dao.impl.MovieDAO;
 import Dao.impl.TicketDAO;
+import Dao.impl.TypeMovieDAO;
 import model.MovieModel;
 import model.TicketModel;
+import model.TypeMovieModel;
 import utility.SessionUtil;
 import utility.SetTable;
 import view.Employee.TicketPanel.TicketFrame;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -36,9 +39,9 @@ public class TicketFrController extends EventTicket{
         this.btnRemove = btnRemove;
     }
 
-    public void CreateOrUpdate(){
+        public void CreateOrUpdate(){
         JTable table1 = new JTable();
-        List<MovieModel> listItem = MovieDAO.getInstance().selectAll();
+        List<MovieModel> listItem = MovieDAO.getInstance().selectMovieUnShow();
         table1 = setTable.setDataToTable(ticket.panelTable,COLUMNS,listItem,ticket.search,METHOD);
 
         ticket.lbIdEmploy.setText(SessionUtil.getInstance().getValueEmpl().getHoTen());

@@ -111,7 +111,9 @@ public class MovieFrameController extends EventMovie{
                         }
                     }
                 }catch (Exception ex) {
-                        JOptionPane.showMessageDialog(null,msg,"Thông báo",JOptionPane.ERROR_MESSAGE);
+                    if(s == null)
+                        msg = "Vui lòng thêm ảnh !!";
+                    JOptionPane.showMessageDialog(null,msg,"Thông báo",JOptionPane.ERROR_MESSAGE);
                 }
             }
 

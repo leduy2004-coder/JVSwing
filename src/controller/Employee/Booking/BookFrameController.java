@@ -1,6 +1,7 @@
 package controller.Employee.Booking;
 
 import Dao.impl.BookingDAO;
+import Dao.impl.TicketDAO;
 import model.BookChairModel;
 import model.BookTicketModel;
 import model.ScheduleModel;
@@ -38,8 +39,9 @@ public class BookFrameController {
             @Override
             public void mouseClicked(MouseEvent e) {
                 String maBook;
+                String maVe = TicketDAO.getInstance().selectByMPhim(sche.getMaPhim()).getMaVe();
                 bookTicketModel.setMaNV(SessionUtil.getInstance().getValueEmpl().getMaNV());
-                bookTicketModel.setMaVe(null);
+                bookTicketModel.setMaVe(maVe);
                 bookTicketModel.setMaKH(null);
                 bookTicketModel.setMaSuat(sche.getMaSC());
                 bookTicketModel.setTongTien(money);
